@@ -2,72 +2,58 @@
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
 
-const WITHOUT = {
-  name: "Zeb Evans",
-  title: "CEO - Founder",
-  company: "Click Up",
-  website: "www.clickup.com",
-  email: "click@customesignature.com",
-  socials: "Website, Instagram, LinkedIn, Facebook, Youtube",
-};
-
-const WITH = {
-  name: "Zeb Evans",
-  title: "ClickUp CEO",
-  company: "ClickUp",
-  email: "zeb@clickup.com",
-  website: "www.clickup.com",
-  accentColor: "#7B68EE",
-};
-
-const PROS = [
-  "Plain black text — no visual hierarchy",
-  "No logo or brand colors",
-  "No profile photo",
-  "No social icons — just text list",
+const WITHOUT_PROS = [
+  "Plain black text — zero visual hierarchy",
+  "No company logo or brand colors",
+  "No profile photo or visual identity",
+  "Social links as raw text only",
   "No call-to-action or meeting link",
-  "No GIF product showcase",
-  "Zero clicks generated",
-  "Looks the same as everyone else",
+  "No animated GIF product showcase",
+  "Zero clicks or engagement generated",
+  "Looks exactly like everyone else",
 ];
 
-const CONS = [
-  "Branded logo with company colors",
-  "Profile photo with diagonal design",
-  "Interactive social sidebar icons",
-  "Verified blue badge trust signal",
+const WITH_PROS = [
+  "Branded logo with your company colors",
+  "Profile photo with designer layout",
+  "Interactive social icons sidebar",
+  "Verified blue checkmark trust badge",
   "One-click calendar booking button",
-  "Animated GIF hero product",
-  "3X more link engagement",
-  "Instantly memorable & professional",
+  "Animated GIF hero product showcase",
+  "3× more link clicks & engagement",
+  "Instantly memorable & authoritative",
 ];
 
 export function Compare() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-80px" });
+  const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section ref={ref} id="compare" className="py-28 relative">
-      <div className="absolute inset-0 opacity-5"
-        style={{ backgroundImage: "radial-gradient(circle at 30% 50%, #2563eb, transparent 60%), radial-gradient(circle at 70% 50%, #7c3aed, transparent 60%)" }} />
+    <section ref={ref} id="compare" className="py-32 relative overflow-hidden">
+      {/* Background */}
+      <div className="orb absolute top-1/2 left-0 -translate-y-1/2 w-[500px] h-[500px]" style={{ background: "rgba(220,38,38,0.05)" }} />
+      <div className="orb absolute top-1/2 right-0 -translate-y-1/2 w-[500px] h-[500px]" style={{ background: "rgba(5,150,105,0.05)" }} />
 
-      <div className="max-w-7xl mx-auto px-6 relative z-10">
+      <div className="relative z-10 max-w-7xl mx-auto px-6">
+        {/* Header */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 24 }}
           animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-16"
+          className="text-center mb-20"
         >
-          <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest border border-red-500/30 text-red-400 mb-4">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-5"
+            style={{ background: "rgba(220,38,38,0.1)", border: "1px solid rgba(220,38,38,0.2)", color: "#f87171" }}>
             Side by Side
-          </span>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+          </div>
+          <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.05] mb-5">
             The Difference Is
-            <span className="block bg-gradient-to-r from-red-400 to-orange-300 bg-clip-text text-transparent">
+            <br />
+            <span style={{ background: "linear-gradient(135deg, #f87171 0%, #fb923c 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Night and Day
             </span>
           </h2>
           <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Stop leaving revenue on the table. See exactly what your emails look like to Fortune 500 decision-makers.
+            Fortune 500 decision-makers notice everything. See exactly what your emails look like on their screens.
           </p>
         </motion.div>
 
@@ -76,55 +62,53 @@ export function Compare() {
           <motion.div
             initial={{ opacity: 0, x: -40 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.2 }}
+            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center text-red-400 text-lg font-bold">✗</div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                style={{ background: "rgba(220,38,38,0.15)", border: "1px solid rgba(220,38,38,0.3)", color: "#f87171" }}>✗</div>
               <h3 className="text-white font-bold text-lg">Without Custom Signature</h3>
             </div>
-            <div className="rounded-2xl overflow-hidden border border-red-500/20" style={{ background: "rgba(10,10,10,0.8)" }}>
-              {/* Email header */}
-              <div className="px-5 py-3 border-b border-white/10 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gray-600 flex items-center justify-center text-sm">👤</div>
+
+            <div className="rounded-2xl overflow-hidden mb-6" style={{ background: "rgba(8,8,18,0.9)", border: "1px solid rgba(220,38,38,0.15)" }}>
+              {/* Email chrome */}
+              <div className="px-5 py-3 border-b border-white/6 flex items-center gap-3" style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div className="w-7 h-7 rounded-full bg-gray-700 flex items-center justify-center text-sm text-gray-400">👤</div>
                 <div>
-                  <div className="text-white text-sm font-medium">Custom Signature</div>
-                  <div className="text-gray-500 text-xs">to: evannicolini@example.com</div>
+                  <div className="text-gray-300 text-xs font-medium">john.smith@company.com</div>
+                  <div className="text-gray-600 text-xs">to: prospect@fortune500.com</div>
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-gray-400 text-sm mb-3">Hey Zach,</p>
-                <div className="space-y-1.5 mb-3">
-                  <div className="h-2 bg-white/10 rounded w-4/5" />
-                  <div className="h-2 bg-white/10 rounded w-3/5" />
+                <p className="text-gray-400 text-sm mb-2">Hi Sarah,</p>
+                <div className="space-y-1.5 mb-2">
+                  <div className="h-2 bg-white/8 rounded-full w-5/6" />
+                  <div className="h-2 bg-white/8 rounded-full w-4/6" />
                 </div>
-                <p className="text-gray-400 text-sm mb-4">Best,</p>
-                {/* Plain text signature */}
-                <div className="text-gray-300 text-sm">
-                  <div className="font-bold">{WITHOUT.name}</div>
-                  <div className="text-gray-400">{WITHOUT.title}</div>
-                  <div className="text-gray-400">{WITHOUT.company}</div>
-                  <div className="text-gray-400">{WITHOUT.website}</div>
-                  <div className="text-gray-400">{WITHOUT.email}</div>
-                  <div className="text-gray-500 text-xs mt-1">{WITHOUT.socials}</div>
+                <p className="text-gray-400 text-sm mt-3 mb-4">Best,</p>
+                <div className="h-px bg-white/6 mb-4" />
+                {/* Plain text sig */}
+                <div className="text-sm text-gray-400 space-y-0.5">
+                  <div className="font-semibold text-gray-300">John Smith</div>
+                  <div>CEO — Founder at ClickUp</div>
+                  <div>www.clickup.com</div>
+                  <div>john@clickup.com</div>
+                  <div className="text-gray-600 text-xs mt-1">Website | Instagram | LinkedIn | Facebook | YouTube</div>
                 </div>
-                {/* Toggle off */}
-                <div className="flex items-center gap-2 mt-5 pt-4 border-t border-white/10">
-                  <div className="w-10 h-6 rounded-full bg-gray-700 relative">
-                    <div className="absolute left-1 top-1 w-4 h-4 bg-gray-400 rounded-full" />
+                {/* Toggle OFF */}
+                <div className="flex items-center gap-2 mt-5 pt-4 border-t border-white/6">
+                  <div className="w-9 h-5 rounded-full relative" style={{ background: "#374151" }}>
+                    <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-gray-500 rounded-full" />
                   </div>
-                  <span className="text-gray-500 text-xs">Custom Signature</span>
-                  <div className="ml-auto flex gap-3">
-                    <button className="text-xs text-gray-500 px-3 py-1.5 rounded-full border border-white/10">↗ Reply</button>
-                    <button className="text-xs text-gray-500 px-3 py-1.5 rounded-full border border-white/10">🗑 Delete</button>
-                  </div>
+                  <span className="text-gray-600 text-xs">Signature off</span>
                 </div>
               </div>
             </div>
-            {/* Cons list */}
-            <ul className="mt-5 space-y-2">
-              {PROS.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-gray-500">
-                  <span className="text-red-500 mt-0.5 flex-shrink-0">✗</span>
+
+            <ul className="space-y-3">
+              {WITHOUT_PROS.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm text-gray-500">
+                  <span className="text-red-500/80 mt-0.5 flex-shrink-0 text-base leading-none">✗</span>
                   {item}
                 </li>
               ))}
@@ -135,88 +119,91 @@ export function Compare() {
           <motion.div
             initial={{ opacity: 0, x: 40 }}
             animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.3 }}
+            transition={{ delay: 0.3, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           >
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-8 h-8 rounded-full bg-green-500/20 border border-green-500/40 flex items-center justify-center text-green-400 text-lg font-bold">✓</div>
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-8 h-8 rounded-full flex items-center justify-center font-bold text-sm"
+                style={{ background: "rgba(5,150,105,0.15)", border: "1px solid rgba(5,150,105,0.3)", color: "#34d399" }}>✓</div>
               <h3 className="text-white font-bold text-lg">With Custom Signature</h3>
             </div>
-            <div className="rounded-2xl overflow-hidden border border-green-500/20 animate-pulse-glow" style={{ background: "rgba(10,10,10,0.8)" }}>
-              {/* Email header */}
-              <div className="px-5 py-3 border-b border-white/10 flex items-center gap-3">
-                <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center font-bold text-sm">C</div>
+
+            <div className="rounded-2xl overflow-hidden mb-6"
+              style={{ background: "rgba(8,8,18,0.9)", border: "1px solid rgba(5,150,105,0.2)", boxShadow: "0 0 32px rgba(5,150,105,0.08)" }}>
+              {/* Email chrome */}
+              <div className="px-5 py-3 border-b border-white/6 flex items-center gap-3" style={{ background: "rgba(255,255,255,0.02)" }}>
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-violet-600 to-violet-400 flex items-center justify-center font-bold text-sm text-white">Z</div>
                 <div>
-                  <div className="text-white text-sm font-medium">Custom Signature</div>
-                  <div className="text-gray-500 text-xs">to: evannicolini@example.com</div>
+                  <div className="text-gray-300 text-xs font-medium">zeb.evans@clickup.com</div>
+                  <div className="text-gray-600 text-xs">to: prospect@fortune500.com</div>
                 </div>
               </div>
               <div className="p-5">
-                <p className="text-gray-400 text-sm mb-3">Hey Zach,</p>
-                <div className="space-y-1.5 mb-3">
-                  <div className="h-2 bg-white/10 rounded w-4/5" />
-                  <div className="h-2 bg-white/10 rounded w-3/5" />
+                <p className="text-gray-400 text-sm mb-2">Hi Sarah,</p>
+                <div className="space-y-1.5 mb-2">
+                  <div className="h-2 bg-white/8 rounded-full w-5/6" />
+                  <div className="h-2 bg-white/8 rounded-full w-4/6" />
                 </div>
-                <p className="text-gray-400 text-sm mb-4">Best,</p>
-                {/* Branded signature */}
-                <div className="rounded-xl overflow-hidden border border-white/10" style={{ background: "rgba(5,5,15,0.9)" }}>
+                <p className="text-gray-400 text-sm mt-3 mb-4">Warm regards,</p>
+                <div className="h-px bg-white/6 mb-4" />
+
+                {/* Branded sig */}
+                <div className="rounded-xl overflow-hidden" style={{ background: "rgba(4,4,12,0.98)", border: "1px solid rgba(123,104,238,0.2)" }}>
                   <div className="flex">
-                    {/* Sidebar */}
-                    <div className="flex flex-col items-center gap-2.5 px-2.5 py-4 border-r border-white/10">
-                      {["🌐","📸","💼","📘","▶️"].map((icon, i) => (
+                    <div className="w-1 flex-shrink-0" style={{ background: "linear-gradient(180deg, #7B68EE, #7B68EE40)" }} />
+                    <div className="flex flex-col items-center gap-2 px-2.5 py-4 border-r border-white/6">
+                      {["🌐","in","▶","𝕏","📸"].map((icon, i) => (
                         <motion.div key={i} whileHover={{ scale: 1.2 }}
-                          className="w-6 h-6 rounded-full bg-white/10 flex items-center justify-center text-xs cursor-pointer hover:bg-blue-600/50 transition-colors">
+                          className="w-6 h-6 rounded-full flex items-center justify-center text-xs cursor-pointer"
+                          style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.06)" }}>
                           {icon}
                         </motion.div>
                       ))}
                     </div>
-                    <div className="flex-1 p-4 flex gap-3">
+                    <div className="flex flex-1 items-center gap-4 px-4 py-4">
                       <div className="flex-1">
-                        <div className="font-bold text-sm mb-0.5" style={{ color: WITH.accentColor }}>⚡ ClickUp</div>
-                        <div className="flex items-center gap-1 mb-1">
-                          <span className="text-white font-bold text-sm">{WITH.name}</span>
+                        <div className="flex items-center gap-1.5 mb-2">
+                          <span className="font-black text-sm" style={{ color: "#7B68EE" }}>⚡ ClickUp</span>
                           <span className="text-blue-400 text-xs">✓</span>
                         </div>
-                        <div className="text-gray-400 text-xs mb-2">{WITH.title}</div>
-                        <div className="text-xs text-gray-500 space-y-0.5">
-                          <div style={{ color: WITH.accentColor }}>{WITH.company}</div>
-                          <div>{WITH.email}</div>
-                          <div>{WITH.website}</div>
+                        <div className="text-white font-bold text-sm mb-0.5">Zeb Evans</div>
+                        <div className="text-gray-400 text-xs mb-3">ClickUp CEO</div>
+                        <div className="text-xs space-y-1 mb-3">
+                          <div className="text-gray-500">zeb@clickup.com</div>
+                          <div className="text-gray-500">www.clickup.com</div>
                         </div>
-                        <motion.button whileHover={{ scale: 1.05 }}
-                          className="mt-2 px-3 py-1 rounded-full text-xs font-semibold text-white"
-                          style={{ background: WITH.accentColor }}>
+                        <motion.button whileHover={{ scale: 1.04 }}
+                          className="px-3 py-1.5 rounded-full text-xs font-semibold text-white"
+                          style={{ background: "#7B68EE" }}>
                           📅 Book a Meeting
                         </motion.button>
                       </div>
-                      {/* Photo */}
-                      <div className="w-16 h-20 rounded-lg overflow-hidden relative flex-shrink-0"
-                        style={{ background: `linear-gradient(135deg, ${WITH.accentColor}40, transparent)` }}>
-                        <div className="absolute inset-0 flex items-center justify-center text-3xl">Z</div>
-                        <div className="absolute inset-0" style={{
-                          background: `repeating-linear-gradient(45deg, transparent, transparent 6px, ${WITH.accentColor}20 6px, ${WITH.accentColor}20 8px)`
-                        }} />
+                      <div className="w-[68px] h-[80px] rounded-xl overflow-hidden relative flex-shrink-0"
+                        style={{ background: "linear-gradient(145deg, rgba(123,104,238,0.3), rgba(123,104,238,0.06))" }}>
+                        <div className="absolute inset-0 flex items-center justify-center font-black text-3xl"
+                          style={{ color: "rgba(123,104,238,0.6)" }}>Z</div>
+                        <div className="absolute inset-0 opacity-20"
+                          style={{ background: "repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(123,104,238,0.3) 5px, rgba(123,104,238,0.3) 6px)" }} />
+                        <div className="absolute bottom-1.5 right-1.5 bg-black/50 rounded px-1 py-0.5 text-white/60 border border-white/10"
+                          style={{ fontSize: 7, fontWeight: 700 }}>GIF</div>
                       </div>
                     </div>
                   </div>
                 </div>
-                {/* Toggle on */}
-                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/10">
-                  <div className="w-10 h-6 rounded-full relative" style={{ background: "#2563eb" }}>
-                    <div className="absolute right-1 top-1 w-4 h-4 bg-white rounded-full" />
+
+                {/* Toggle ON */}
+                <div className="flex items-center gap-2 mt-4 pt-3 border-t border-white/6">
+                  <div className="w-9 h-5 rounded-full relative" style={{ background: "#059669" }}>
+                    <div className="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow" />
                   </div>
-                  <span className="text-gray-400 text-xs">Custom Signature</span>
-                  <div className="ml-auto flex gap-3">
-                    <button className="text-xs text-blue-400 px-3 py-1.5 rounded-full border border-blue-500/30">↗ Reply</button>
-                    <button className="text-xs text-gray-500 px-3 py-1.5 rounded-full border border-white/10">🗑 Delete</button>
-                  </div>
+                  <span className="text-gray-400 text-xs">Signature active</span>
                 </div>
               </div>
             </div>
-            {/* Pros list */}
-            <ul className="mt-5 space-y-2">
-              {CONS.map((item) => (
-                <li key={item} className="flex items-start gap-2 text-sm text-gray-300">
-                  <span className="text-green-400 mt-0.5 flex-shrink-0">✓</span>
+
+            <ul className="space-y-3">
+              {WITH_PROS.map((item) => (
+                <li key={item} className="flex items-start gap-3 text-sm text-gray-300">
+                  <span className="text-green-400 mt-0.5 flex-shrink-0 text-base leading-none">✓</span>
                   {item}
                 </li>
               ))}
