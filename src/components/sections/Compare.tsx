@@ -1,152 +1,225 @@
 "use client";
 import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 
-const BAD = ["Plain black text — zero visual hierarchy","No logo or brand colors","No profile photo","Social links as raw text only","No call-to-action or booking link","No animated GIF product showcase","Zero engagement generated","Looks the same as everyone else"];
-const GOOD = ["Branded logo with company colors","Profile photo with designer layout","Interactive social icons sidebar","Verified blue checkmark badge","One-click calendar booking button","Animated GIF hero product showcase","3× more link clicks & engagement","Instantly memorable & authoritative"];
+const TEMPLATES = [
+  {
+    id: "exec",
+    label: "Executive",
+    name: "Alexandra Chen",
+    title: "Chief Revenue Officer",
+    company: "Salesforce",
+    email: "a.chen@salesforce.com",
+    phone: "+1 (415) 555-9201",
+    accent: "#00A1E0",
+    logo: "SF",
+    badge: true,
+    color: "#00A1E0",
+  },
+  {
+    id: "startup",
+    label: "Startup",
+    name: "Marcus Rivera",
+    title: "Co-Founder & CEO",
+    company: "Linear",
+    email: "marcus@linear.app",
+    phone: "+1 (650) 555-0847",
+    accent: "#5E6AD2",
+    logo: "L",
+    badge: true,
+    color: "#5E6AD2",
+  },
+  {
+    id: "creative",
+    label: "Creative",
+    name: "Sofia Lee",
+    title: "Creative Director",
+    company: "Figma",
+    email: "sofia@figma.com",
+    phone: "+1 (415) 555-4422",
+    accent: "#F24E1E",
+    logo: "F",
+    badge: false,
+    color: "#F24E1E",
+  },
+  {
+    id: "finance",
+    label: "Finance",
+    name: "David Thompson",
+    title: "Managing Director",
+    company: "Goldman Sachs",
+    email: "d.thompson@gs.com",
+    phone: "+1 (212) 555-8800",
+    accent: "#2563eb",
+    logo: "GS",
+    badge: true,
+    color: "#2563eb",
+  },
+  {
+    id: "tech",
+    label: "Tech",
+    name: "Priya Patel",
+    title: "Staff Engineer",
+    company: "Stripe",
+    email: "priya@stripe.com",
+    phone: "+1 (415) 555-6633",
+    accent: "#635BFF",
+    logo: "S",
+    badge: false,
+    color: "#635BFF",
+  },
+  {
+    id: "sales",
+    label: "Sales",
+    name: "Ryan Kim",
+    title: "Enterprise AE",
+    company: "HubSpot",
+    email: "ryan.kim@hubspot.com",
+    phone: "+1 (857) 555-7711",
+    accent: "#FF7A59",
+    logo: "H",
+    badge: false,
+    color: "#FF7A59",
+  },
+];
 
-const ACCENT = "#7B68EE";
+function TemplateCard({ t, selected, onClick }: { t: typeof TEMPLATES[0]; selected: boolean; onClick: () => void }) {
+  return (
+    <motion.div
+      whileHover={{ y: -4 }}
+      onClick={onClick}
+      style={{
+        borderRadius: 14, padding: 20, cursor: "pointer",
+        border: selected ? `1px solid ${t.accent}60` : "1px solid rgba(255,255,255,0.07)",
+        background: selected ? `${t.accent}0a` : "rgba(255,255,255,0.025)",
+        transition: "border-color 0.2s, background 0.2s",
+        position: "relative", overflow: "hidden",
+      }}
+    >
+      {selected && <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, ${t.accent}, ${t.accent}44)` }} />}
+      
+      {/* Mini signature preview */}
+      <div style={{ borderTop: `2px solid ${t.accent}`, paddingTop: 12 }}>
+        <div style={{ display: "flex", gap: 10, alignItems: "flex-start" }}>
+          <div style={{ width: 36, height: 36, borderRadius: "50%", background: `${t.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, color: t.accent, flexShrink: 0 }}>{t.name[0]}</div>
+          <div style={{ flex: 1, minWidth: 0 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 2 }}>
+              <span style={{ fontWeight: 700, fontSize: 13, color: "#e2e8f0", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{t.name}</span>
+              {t.badge && <div style={{ width: 13, height: 13, borderRadius: "50%", background: "#1d9bf0", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}><span style={{ color: "#fff", fontSize: 7 }}>✓</span></div>}
+            </div>
+            <div style={{ fontSize: 11, color: "#64748b" }}>{t.title}</div>
+            <div style={{ fontSize: 11, color: t.accent, fontWeight: 600 }}>{t.company}</div>
+          </div>
+          <div style={{ width: 26, height: 26, borderRadius: 6, background: `${t.accent}18`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, fontWeight: 900, color: t.accent, flexShrink: 0 }}>{t.logo}</div>
+        </div>
+      </div>
+      
+      <div style={{ marginTop: 12, display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+        <span style={{ fontSize: 11, fontWeight: 700, color: t.accent, letterSpacing: "0.05em" }}>{t.label}</span>
+        {selected && <span style={{ fontSize: 10, color: t.accent, background: `${t.accent}20`, padding: "2px 8px", borderRadius: 100 }}>Selected ✓</span>}
+      </div>
+    </motion.div>
+  );
+}
 
 export function Compare() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
+  const [selected, setSelected] = useState(0);
+  const t = TEMPLATES[selected];
 
   return (
-    <section id="compare" ref={ref} style={{ padding: "96px 0", background: "#06060f" }}>
+    <section id="compare" ref={ref} style={{ padding: "100px 0", background: "#020208" }}>
       <Container>
-        {/* Header */}
         <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
-          <div className="pill pill-red" style={{ marginBottom: 16 }}>Side by Side</div>
-          <h2 style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16 }}>
-            The Difference Is
+          <div className="pill pill-cyan" style={{ marginBottom: 20 }}>Live Examples</div>
+          <h2 className="display-lg" style={{ color: "#fff", marginBottom: 16 }}>
+            Top Signature
             <br />
-            <span className="text-gradient-orange">Night and Day</span>
+            <span className="grad-aurora">Templates.</span>
           </h2>
-          <p style={{ fontSize: 17, color: "#9ca3af", maxWidth: 520, margin: "0 auto", lineHeight: 1.65 }}>
-            Fortune 500 decision-makers notice everything. See exactly what your emails look like on their screen.
+          <p style={{ fontSize: 17, color: "#64748b", maxWidth: 440, margin: "0 auto", lineHeight: 1.7 }}>
+            Click any template to preview it live. Each one is crafted for a specific industry and persona.
           </p>
         </motion.div>
 
-        {/* Two columns */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 32 }} className="grid md:grid-cols-2">
-          {/* --- WITHOUT --- */}
-          <motion.div initial={{ opacity: 0, x: -32 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.15, duration: 0.6 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(220,38,38,0.12)", border: "1px solid rgba(220,38,38,0.25)", display: "flex", alignItems: "center", justifyContent: "center", color: "#f87171", fontSize: 14, fontWeight: 700 }}>✗</div>
-              <h3 style={{ fontWeight: 700, fontSize: 16, color: "#fff" }}>Without Custom Signature</h3>
-            </div>
-
-            {/* Email mockup */}
-            <div className="email-surface" style={{ border: "1px solid rgba(220,38,38,0.14)", marginBottom: 24 }}>
-              <div style={{ padding: "12px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.02)" }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: "#374151", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, color: "#9ca3af" }}>👤</div>
-                <div>
-                  <div style={{ color: "#d1d5db", fontSize: 12, fontWeight: 500 }}>john.smith@company.com</div>
-                  <div style={{ color: "#4b5563", fontSize: 11 }}>to: prospect@fortune500.com</div>
-                </div>
-              </div>
-              <div style={{ padding: 18 }}>
-                <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 8 }}>Hi Sarah,</p>
-                {[0.83,0.66].map((w,i) => <div key={i} style={{ height: 8, background: "rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 6, width: `${w*100}%` }} />)}
-                <p style={{ color: "#6b7280", fontSize: 13, marginTop: 12, marginBottom: 14 }}>Best,</p>
-                <div style={{ height: 1, background: "rgba(255,255,255,0.06)", marginBottom: 12 }} />
-                {/* Plain text sig */}
-                <div style={{ fontSize: 13, lineHeight: 1.8, color: "#6b7280" }}>
-                  <div style={{ fontWeight: 600, color: "#9ca3af" }}>John Smith</div>
-                  <div>CEO — Founder at ClickUp</div>
-                  <div>www.clickup.com</div>
-                  <div>john@clickup.com</div>
-                  <div style={{ fontSize: 11, color: "#4b5563", marginTop: 4 }}>Website | Instagram | LinkedIn | Facebook | YouTube</div>
-                </div>
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 16, paddingTop: 12, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                  <div style={{ width: 32, height: 18, borderRadius: 9, background: "#374151", position: "relative" }}>
-                    <div style={{ position: "absolute", left: 3, top: 3, width: 12, height: 12, borderRadius: "50%", background: "#6b7280" }} />
-                  </div>
-                  <span style={{ fontSize: 11, color: "#4b5563" }}>Signature off</span>
-                </div>
-              </div>
-            </div>
-
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
-              {BAD.map(item => (
-                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "#6b7280" }}>
-                  <span style={{ color: "#ef4444", flexShrink: 0, lineHeight: "1.5" }}>✗</span>
-                  {item}
-                </li>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.2fr", gap: 40, alignItems: "start" }} className="grid md:grid-cols-2">
+          {/* Template grid */}
+          <motion.div initial={{ opacity: 0, x: -24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.1 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              {TEMPLATES.map((tmpl, i) => (
+                <TemplateCard key={tmpl.id} t={tmpl} selected={i === selected} onClick={() => setSelected(i)} />
               ))}
-            </ul>
+            </div>
           </motion.div>
 
-          {/* --- WITH --- */}
-          <motion.div initial={{ opacity: 0, x: 32 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.25, duration: 0.6 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 20 }}>
-              <div style={{ width: 32, height: 32, borderRadius: "50%", background: "rgba(5,150,105,0.12)", border: "1px solid rgba(5,150,105,0.25)", display: "flex", alignItems: "center", justifyContent: "center", color: "#34d399", fontSize: 14, fontWeight: 700 }}>✓</div>
-              <h3 style={{ fontWeight: 700, fontSize: 16, color: "#fff" }}>With Custom Signature</h3>
-            </div>
-
-            {/* Email mockup */}
-            <div className="email-surface" style={{ border: `1px solid ${ACCENT}22`, boxShadow: `0 0 32px ${ACCENT}12`, marginBottom: 24 }}>
-              <div style={{ padding: "12px 18px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 10, background: "rgba(255,255,255,0.02)" }}>
-                <div style={{ width: 28, height: 28, borderRadius: "50%", background: `linear-gradient(135deg, ${ACCENT}, ${ACCENT}80)`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 13, color: "#fff" }}>Z</div>
-                <div>
-                  <div style={{ color: "#d1d5db", fontSize: 12, fontWeight: 500 }}>zeb.evans@clickup.com</div>
-                  <div style={{ color: "#4b5563", fontSize: 11 }}>to: prospect@fortune500.com</div>
-                </div>
-              </div>
-              <div style={{ padding: 18 }}>
-                <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 8 }}>Hi Sarah,</p>
-                {[0.83,0.66].map((w,i) => <div key={i} style={{ height: 8, background: "rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 6, width: `${w*100}%` }} />)}
-                <p style={{ color: "#6b7280", fontSize: 13, marginTop: 12, marginBottom: 14 }}>Warm regards,</p>
-                <div style={{ height: 1, background: "rgba(255,255,255,0.06)", marginBottom: 12 }} />
-
-                {/* Branded signature */}
-                <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${ACCENT}20` }}>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ width: 3, flexShrink: 0, background: `linear-gradient(180deg, ${ACCENT}, ${ACCENT}40)` }} />
-                    <div style={{ display: "flex", flexDirection: "column", gap: 7, padding: "12px 10px", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
-                      {["🌐","in","▶","𝕏","📸"].map((ic,i) => (
-                        <div key={i} style={{ width: 22, height: 22, borderRadius: "50%", background: `${ACCENT}18`, border: `1px solid ${ACCENT}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, cursor: "pointer" }}>{ic}</div>
-                      ))}
+          {/* Live preview */}
+          <motion.div initial={{ opacity: 0, x: 24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2 }}>
+            <div style={{ position: "sticky", top: 100 }}>
+              <div className="mac-window">
+                <div className="mac-titlebar">
+                  <div className="mac-dot" style={{ background: "#ff5f57" }} />
+                  <div className="mac-dot" style={{ background: "#febc2e" }} />
+                  <div className="mac-dot" style={{ background: "#28c840" }} />
+                  <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+                    <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 6, padding: "3px 16px", fontSize: 12, color: "#475569" }}>
+                      Gmail — Compose
                     </div>
-                    <div style={{ flex: 1, padding: "12px 14px", display: "flex", gap: 12, alignItems: "center" }}>
-                      <div style={{ flex: 1 }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 6 }}>
-                          <span style={{ fontWeight: 800, fontSize: 12, color: ACCENT }}>⚡ ClickUp</span>
-                          <span style={{ color: "#60a5fa", fontSize: 9 }}>✓</span>
+                  </div>
+                </div>
+
+                <div style={{ padding: "16px 20px 20px", background: "#0e0e1a" }}>
+                  <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "8px 0", fontSize: 12, color: "#475569" }}>
+                    <span style={{ marginRight: 8 }}>To:</span><span style={{ color: "#94a3b8" }}>prospect@company.com</span>
+                  </div>
+                  <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "8px 0", fontSize: 12, color: "#475569" }}>
+                    <span style={{ marginRight: 8 }}>Subject:</span><span style={{ color: "#e2e8f0" }}>Following up on our conversation</span>
+                  </div>
+
+                  <div style={{ padding: "16px 0 0", fontSize: 13, color: "#94a3b8", lineHeight: 1.8 }}>
+                    <p style={{ marginBottom: 8 }}>Hi there,</p>
+                    <p style={{ marginBottom: 16 }}>It was great connecting at the conference. I&apos;d love to explore how we can work together.</p>
+
+                    {/* Animated signature */}
+                    <motion.div
+                      key={t.id}
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ duration: 0.4 }}
+                      style={{ borderTop: `3px solid ${t.accent}`, paddingTop: 16 }}
+                    >
+                      <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                        <div style={{ width: 52, height: 52, borderRadius: "50%", background: `linear-gradient(135deg, ${t.accent}cc, ${t.accent}44)`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 20, color: "#fff", flexShrink: 0 }}>{t.name[0]}</div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
+                            <span style={{ fontWeight: 700, fontSize: 15, color: "#e2e8f0" }}>{t.name}</span>
+                            {t.badge && <div style={{ width: 16, height: 16, borderRadius: "50%", background: "#1d9bf0", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ color: "#fff", fontSize: 8, fontWeight: 900 }}>✓</span></div>}
+                          </div>
+                          <div style={{ fontSize: 12, color: "#64748b", marginBottom: 10 }}>{t.title} · <span style={{ color: t.accent, fontWeight: 600 }}>{t.company}</span></div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 3, marginBottom: 10 }}>
+                            <span style={{ fontSize: 11, color: "#475569" }}><span style={{ color: t.accent }}>✉ </span>{t.email}</span>
+                            <span style={{ fontSize: 11, color: "#475569" }}><span style={{ color: t.accent }}>☎ </span>{t.phone}</span>
+                          </div>
+                          <div style={{ display: "flex", gap: 5 }}>
+                            {[["in","#0077b5"],["𝕏","#111827"],["🌐",t.accent],["📅",t.accent]].map(([ic, bg], i) => (
+                              <div key={i} style={{ width: 24, height: 24, borderRadius: 6, background: bg as string, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, color: "#fff", fontWeight: 700 }}>{ic}</div>
+                            ))}
+                          </div>
                         </div>
-                        <div style={{ color: "#fff", fontWeight: 700, fontSize: 12, marginBottom: 2 }}>Zeb Evans</div>
-                        <div style={{ color: "#9ca3af", fontSize: 10, marginBottom: 8 }}>ClickUp CEO</div>
-                        <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 2 }}>zeb@clickup.com</div>
-                        <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 8 }}>www.clickup.com</div>
-                        <div style={{ display: "inline-block", padding: "4px 10px", borderRadius: 100, background: ACCENT, color: "#fff", fontSize: 10, fontWeight: 600, cursor: "pointer" }}>📅 Book a Meeting</div>
+                        <div style={{ width: 38, height: 38, borderRadius: 9, background: `${t.accent}18`, border: `1px solid ${t.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 13, color: t.accent }}>{t.logo}</div>
                       </div>
-                      <div style={{ width: 58, height: 72, borderRadius: 8, background: `linear-gradient(135deg, ${ACCENT}35, ${ACCENT}08)`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-                        <span style={{ fontWeight: 900, fontSize: 22, color: `${ACCENT}80` }}>Z</span>
-                        <div style={{ position: "absolute", inset: 0, background: `repeating-linear-gradient(45deg, transparent, transparent 4px, ${ACCENT}18 4px, ${ACCENT}18 5px)`, opacity: 0.4 }} />
-                        <div style={{ position: "absolute", bottom: 4, right: 4, background: "rgba(0,0,0,0.5)", borderRadius: 3, padding: "1px 3px", fontSize: 6, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>GIF</div>
-                      </div>
-                    </div>
+                    </motion.div>
                   </div>
-                </div>
-
-                <div style={{ display: "flex", alignItems: "center", gap: 8, marginTop: 14, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.05)" }}>
-                  <div style={{ width: 32, height: 18, borderRadius: 9, background: "#059669", position: "relative" }}>
-                    <div style={{ position: "absolute", right: 3, top: 3, width: 12, height: 12, borderRadius: "50%", background: "#fff" }} />
-                  </div>
-                  <span style={{ fontSize: 11, color: "#6b7280" }}>Signature active</span>
                 </div>
               </div>
-            </div>
 
-            <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: 10 }}>
-              {GOOD.map(item => (
-                <li key={item} style={{ display: "flex", alignItems: "flex-start", gap: 10, fontSize: 13, color: "#d1d5db" }}>
-                  <span style={{ color: "#34d399", flexShrink: 0, lineHeight: "1.5" }}>✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
+              {/* Use this template button */}
+              <div style={{ marginTop: 16, display: "flex", gap: 10 }}>
+                <a href="#builder" className="btn btn-primary btn-md" style={{ flex: 1, justifyContent: "center" }}>Use This Template</a>
+                <button className="btn btn-ghost btn-md" style={{ fontSize: 13 }} onClick={() => setSelected((selected + 1) % TEMPLATES.length)}>Next →</button>
+              </div>
+            </div>
           </motion.div>
         </div>
       </Container>

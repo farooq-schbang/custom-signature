@@ -1,6 +1,7 @@
 import { Navbar } from "@/components/sections/Navbar";
 import { Hero } from "@/components/sections/Hero";
 import { Stats } from "@/components/sections/Stats";
+import { HowItWorks } from "@/components/sections/HowItWorks";
 import { Features } from "@/components/sections/Features";
 import { Compare } from "@/components/sections/Compare";
 import { InteractiveDesign } from "@/components/sections/InteractiveDesign";
@@ -12,13 +13,14 @@ import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
   return (
-    <main className="bg-black">
+    <main style={{ background: "#020208" }}>
       <Navbar />
       <Hero />
       <Stats />
+      <HowItWorks />
       <Features />
-      <InteractiveDesign />
       <Compare />
+      <InteractiveDesign />
       <Builder />
       <Testimonials />
       <Pricing />

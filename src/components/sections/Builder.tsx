@@ -3,193 +3,175 @@ import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 
-const COLORS = ["#2563eb","#7c3aed","#059669","#dc2626","#d97706","#0891b2","#ec4899","#f59e0b"];
 const FIELDS = [
-  { key:"name", label:"Full Name", placeholder:"Alex Johnson" },
-  { key:"title", label:"Job Title", placeholder:"VP of Sales" },
-  { key:"company", label:"Company", placeholder:"Acme Corporation" },
-  { key:"email", label:"Email Address", placeholder:"alex@acmecorp.com" },
-  { key:"website", label:"Website", placeholder:"www.acmecorp.com" },
-  { key:"calendly", label:"Calendar Link", placeholder:"calendly.com/yourname" },
+  { key: "name", label: "Full Name", placeholder: "Alex Johnson", type: "text" },
+  { key: "title", label: "Job Title", placeholder: "VP of Sales", type: "text" },
+  { key: "company", label: "Company", placeholder: "Acme Corp", type: "text" },
+  { key: "email", label: "Email", placeholder: "alex@acme.com", type: "email" },
+  { key: "phone", label: "Phone", placeholder: "+1 (555) 000-0000", type: "tel" },
+  { key: "website", label: "Website", placeholder: "https://acme.com", type: "url" },
 ];
-const SOCIALS = [
-  { key:"web", icon:"🌐", label:"Website" },
-  { key:"li", icon:"in", label:"LinkedIn" },
-  { key:"yt", icon:"▶", label:"YouTube" },
-  { key:"tw", icon:"𝕏", label:"Twitter" },
-  { key:"ig", icon:"📸", label:"Instagram" },
-];
+
+const ACCENT_COLORS = ["#2563eb","#5E6AD2","#7c3aed","#00A1E0","#10b981","#f59e0b","#ef4444","#FF7A59"];
+
+const TABS = ["Design","Links","Banner","Analytics"];
 
 export function Builder() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
-  const [f, setF] = useState({ name:"Alex Johnson", title:"VP of Sales", company:"Acme Corp", email:"alex@acmecorp.com", website:"www.acmecorp.com", calendly:"calendly.com/alexjohnson", accentColor:"#2563eb" });
+
+  const [fields, setFields] = useState<Record<string, string>>({
+    name: "Alex Johnson",
+    title: "VP of Sales",
+    company: "Acme Corp",
+    email: "alex@acme.com",
+    phone: "+1 (555) 012-3456",
+    website: "https://acme.com",
+  });
+  const [accent, setAccent] = useState("#2563eb");
+  const [badge, setBadge] = useState(true);
+  const [activeTab, setActiveTab] = useState("Design");
   const [copied, setCopied] = useState(false);
-  const set = (k: string, v: string) => setF(p => ({ ...p, [k]: v }));
-  const c = f.accentColor;
+
+  const set = (k: string, v: string) => setFields(prev => ({ ...prev, [k]: v }));
 
   const handleCopy = () => {
-    const html = `<table cellpadding="0" cellspacing="0" border="0" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;">
-  <tr>
-    <td style="vertical-align:middle;padding-right:10px;border-right:2px solid ${c}40;">
-      <table cellpadding="0" cellspacing="4">
-        ${SOCIALS.map(s=>`<tr><td><a href="#" style="display:block;width:22px;height:22px;border-radius:50%;background:${c}18;text-align:center;line-height:22px;text-decoration:none;font-size:10px;">${s.icon}</a></td></tr>`).join('')}
-      </table>
-    </td>
-    <td style="vertical-align:top;padding-left:12px;padding-right:12px;">
-      <div style="color:${c};font-weight:800;font-size:12px;margin-bottom:4px;">${f.company}</div>
-      <div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:2px;">${f.name} <span style="color:#1d9bf0;font-size:11px;">✓</span></div>
-      <div style="color:#9ca3af;font-size:12px;margin-bottom:6px;">${f.title}</div>
-      <div style="color:#6b7280;font-size:11px;margin-bottom:2px;"><a href="mailto:${f.email}" style="color:#6b7280;text-decoration:none;">${f.email}</a></div>
-      <div style="color:#6b7280;font-size:11px;margin-bottom:8px;"><a href="https://${f.website}" style="color:#6b7280;text-decoration:none;">${f.website}</a></div>
-      ${f.calendly ? `<a href="https://${f.calendly}" style="display:inline-block;padding:5px 14px;background:${c};color:#fff;border-radius:20px;text-decoration:none;font-size:11px;font-weight:600;">📅 Book a Meeting</a>` : ''}
-    </td>
-  </tr>
-</table>`;
-    navigator.clipboard.writeText(html);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    const html = `<table cellpadding="0" cellspacing="0" border="0" style="font-family:Arial,sans-serif;"><tr><td style="border-top:3px solid ${accent};padding-top:12px;"><table cellpadding="0" cellspacing="0" border="0"><tr><td style="padding-right:12px;vertical-align:top;"><div style="width:44px;height:44px;border-radius:50%;background:${accent};display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:18px;">${fields.name?.[0] || "A"}</div></td><td><strong style="color:#111827;font-size:14px;">${fields.name || ""}</strong><br/><span style="color:#6b7280;font-size:12px;">${fields.title || ""} · ${fields.company || ""}</span><br/><span style="color:#9ca3af;font-size:11px;">${fields.email || ""} · ${fields.phone || ""}</span></td></tr></table></td></tr></table>`;
+    navigator.clipboard.writeText(html).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2000); });
   };
 
   return (
-    <section id="builder" ref={ref} style={{ padding: "96px 0", background: "linear-gradient(180deg, #06060f 0%, #080915 100%)" }}>
+    <section id="builder" ref={ref} style={{ padding: "100px 0", background: "#020208" }}>
       <Container>
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
-          <div className="pill pill-cyan" style={{ marginBottom: 16 }}>⚡ Live Builder</div>
-          <h2 style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16 }}>
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 56 }}>
+          <div className="pill pill-green" style={{ marginBottom: 20 }}>Live Builder</div>
+          <h2 className="display-lg" style={{ color: "#fff", marginBottom: 16 }}>
             Build Yours in
             <br />
-            <span className="text-gradient-green">60 Seconds</span>
+            <span className="grad-green">Under 2 Minutes.</span>
           </h2>
-          <p style={{ fontSize: 17, color: "#9ca3af", maxWidth: 480, margin: "0 auto", lineHeight: 1.65 }}>
-            Fill in your details and watch your signature come to life. Copy the HTML and paste it anywhere.
+          <p style={{ fontSize: 17, color: "#64748b", maxWidth: 420, margin: "0 auto", lineHeight: 1.7 }}>
+            Type your details, pick a style, copy and paste. No account required to get started.
           </p>
         </motion.div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 32 }} className="grid md:grid-cols-2">
-          {/* Form */}
-          <motion.div initial={{ opacity: 0, x: -24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.1, duration: 0.6 }}
-            className="card" style={{ padding: 28 }}>
-            <h3 style={{ fontWeight: 700, color: "#fff", fontSize: 15, marginBottom: 24, display: "flex", alignItems: "center", gap: 8 }}>
-              <span style={{ color: "#60a5fa" }}>✦</span> Your Information
-            </h3>
-            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-              {FIELDS.map(({ key, label, placeholder }) => (
-                <div key={key}>
-                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>{label}</label>
-                  <input type="text" value={(f as Record<string,string>)[key]} onChange={e => set(key, e.target.value)} placeholder={placeholder}
-                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", fontSize: 13, outline: "none", boxSizing: "border-box" }}
-                    onFocus={e => { e.target.style.borderColor = `${c}60`; e.target.style.background = "rgba(255,255,255,0.06)"; }}
-                    onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
-                  />
-                </div>
-              ))}
-              {/* Color picker */}
-              <div>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>Brand Color</label>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {COLORS.map(col => (
-                    <button key={col} onClick={() => set("accentColor", col)} title={col}
-                      style={{ width: 30, height: 30, borderRadius: "50%", background: col, border: f.accentColor === col ? `2px solid ${col}` : "2px solid transparent", outline: f.accentColor === col ? `2px solid rgba(255,255,255,0.4)` : "2px solid transparent", outlineOffset: 2, transform: f.accentColor === col ? "scale(1.2)" : "scale(1)", cursor: "pointer", transition: "all 0.2s" }} />
-                  ))}
-                </div>
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 32, alignItems: "start" }} className="grid md:grid-cols-2">
+          {/* Editor panel */}
+          <motion.div initial={{ opacity: 0, x: -24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.1 }}>
+            <div className="mac-window">
+              {/* App tabs */}
+              <div style={{ background: "#1a1a2e", borderBottom: "1px solid rgba(255,255,255,0.06)", padding: "0 16px", display: "flex", alignItems: "center", gap: 2 }}>
+                {TABS.map(tab => (
+                  <button key={tab} onClick={() => setActiveTab(tab)}
+                    style={{ padding: "12px 16px", fontSize: 13, fontWeight: 600, border: "none", cursor: "pointer", background: "transparent", borderBottom: activeTab === tab ? "2px solid #2563eb" : "2px solid transparent", color: activeTab === tab ? "#60a5fa" : "#475569", transition: "all 0.2s" }}
+                  >{tab}</button>
+                ))}
               </div>
-              {/* Socials */}
-              <div>
-                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>Social Channels</label>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-                  {SOCIALS.map(({ key, icon, label }) => (
-                    <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 100, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", fontSize: 12, color: "#9ca3af", cursor: "pointer" }}>
-                      <span style={{ fontSize: 11 }}>{icon}</span> {label}
+
+              <div style={{ padding: 20, background: "#0e0e1a" }}>
+                {/* Color picker */}
+                <div style={{ marginBottom: 20 }}>
+                  <div style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 10 }}>Accent Color</div>
+                  <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                    {ACCENT_COLORS.map(c => (
+                      <button key={c} onClick={() => setAccent(c)}
+                        style={{ width: 28, height: 28, borderRadius: "50%", background: c, border: c === accent ? `3px solid #fff` : "3px solid transparent", cursor: "pointer", boxShadow: c === accent ? `0 0 0 2px ${c}` : "none", transition: "all 0.15s" }}
+                      />
+                    ))}
+                  </div>
+                </div>
+
+                {/* Fields */}
+                <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                  {FIELDS.map(f => (
+                    <div key={f.key}>
+                      <label style={{ fontSize: 11, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.08em", display: "block", marginBottom: 5 }}>{f.label}</label>
+                      <input
+                        type={f.type}
+                        value={fields[f.key] || ""}
+                        onChange={e => set(f.key, e.target.value)}
+                        placeholder={f.placeholder}
+                        style={{ width: "100%", padding: "9px 12px", borderRadius: 8, background: "rgba(255,255,255,0.05)", border: "1px solid rgba(255,255,255,0.09)", color: "#e2e8f0", fontSize: 13, outline: "none", fontFamily: "inherit", transition: "border-color 0.2s" }}
+                        onFocus={e => e.target.style.borderColor = `${accent}60`}
+                        onBlur={e => e.target.style.borderColor = "rgba(255,255,255,0.09)"}
+                      />
                     </div>
                   ))}
+                </div>
+
+                {/* Options */}
+                <div style={{ marginTop: 16, display: "flex", gap: 10, alignItems: "center" }}>
+                  <button onClick={() => setBadge(b => !b)}
+                    style={{ display: "flex", alignItems: "center", gap: 8, padding: "7px 12px", borderRadius: 8, border: badge ? `1px solid ${accent}40` : "1px solid rgba(255,255,255,0.08)", background: badge ? `${accent}12` : "rgba(255,255,255,0.04)", cursor: "pointer", color: badge ? accent : "#64748b", fontSize: 12, fontWeight: 600, transition: "all 0.2s" }}
+                  >
+                    {badge ? "✓ " : "○ "} Verified Badge
+                  </button>
                 </div>
               </div>
             </div>
           </motion.div>
 
-          {/* Preview */}
-          <motion.div initial={{ opacity: 0, x: 24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2, duration: 0.6 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
-              <h3 style={{ fontWeight: 700, color: "#fff", fontSize: 15 }}>Live Preview</h3>
-              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#34d399", marginLeft: "auto" }}>
-                <motion.div animate={{ scale: [1,1.5,1] }} transition={{ duration: 2, repeat: Infinity }}
-                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#34d399" }} />
-                Live
-              </div>
-            </div>
-
-            {/* Email mockup */}
-            <div className="email-surface" style={{ marginBottom: 16 }}>
-              <div style={{ padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.02)" }}>
-                <div style={{ display: "flex", gap: 5 }}>
-                  {["rgba(255,69,58,0.7)","rgba(255,196,0,0.7)","rgba(40,200,64,0.7)"].map((bg,i) => <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: bg }} />)}
+          {/* Preview panel */}
+          <motion.div initial={{ opacity: 0, x: 24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2 }}>
+            <div style={{ position: "sticky", top: 100 }}>
+              <div className="mac-window">
+                <div className="mac-titlebar">
+                  <div className="mac-dot" style={{ background: "#ff5f57" }} />
+                  <div className="mac-dot" style={{ background: "#febc2e" }} />
+                  <div className="mac-dot" style={{ background: "#28c840" }} />
+                  <div style={{ flex: 1, textAlign: "center", fontSize: 12, color: "#475569" }}>Live Preview</div>
                 </div>
-                <span style={{ fontSize: 11, color: "#4b5563", marginLeft: 8 }}>Gmail — Compose</span>
-              </div>
-              <div style={{ padding: 18 }}>
-                <p style={{ color: "#4b5563", fontSize: 13, marginBottom: 8 }}>Hi [Recipient],</p>
-                {[0.7,0.5].map((w,i) => <div key={i} style={{ height: 8, background: "rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 6, width: `${w*100}%` }} />)}
-                <p style={{ color: "#4b5563", fontSize: 13, marginTop: 10, marginBottom: 12 }}>Best regards,</p>
-                <div style={{ height: 1, background: "rgba(255,255,255,0.06)", marginBottom: 12 }} />
 
-                {/* Live sig */}
-                <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${c}22` }}>
-                  <div style={{ display: "flex" }}>
-                    <div style={{ width: 3, flexShrink: 0, background: `linear-gradient(180deg, ${c}, ${c}40)` }} />
-                    <div style={{ display: "flex", flexDirection: "column", gap: 7, padding: "12px 10px", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
-                      {SOCIALS.map(({ key, icon }) => (
-                        <motion.div key={key} whileHover={{ scale: 1.15 }}
-                          style={{ width: 22, height: 22, borderRadius: "50%", background: `${c}15`, border: `1px solid ${c}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, cursor: "pointer" }}>
-                          {icon}
-                        </motion.div>
-                      ))}
-                    </div>
-                    <div style={{ flex: 1, padding: "12px 14px", display: "flex", gap: 12, alignItems: "center" }}>
-                      <div style={{ flex: 1, minWidth: 0 }}>
-                        <div style={{ fontWeight: 800, fontSize: 12, color: c, marginBottom: 5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.company || "Your Company"}</div>
-                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
-                          <span style={{ color: "#fff", fontWeight: 700, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name || "Your Name"}</span>
-                          <span style={{ color: "#60a5fa", fontSize: 10 }}>✓</span>
+                <div style={{ padding: 20, background: "#0e0e1a" }}>
+                  {/* Fake email body */}
+                  <div style={{ fontSize: 13, color: "#64748b", lineHeight: 1.7, marginBottom: 20, paddingBottom: 20, borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    <p style={{ marginBottom: 6 }}>Hi Sarah,</p>
+                    <p style={{ marginBottom: 6 }}>Thanks for your time on our call today — excited about the opportunity ahead.</p>
+                    <p>Best,</p>
+                  </div>
+
+                  {/* Live signature */}
+                  <motion.div
+                    key={accent + JSON.stringify(fields)}
+                    initial={{ opacity: 0.6 }} animate={{ opacity: 1 }} transition={{ duration: 0.25 }}
+                    style={{ borderTop: `3px solid ${accent}`, paddingTop: 16 }}
+                  >
+                    <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+                      <div style={{ width: 48, height: 48, borderRadius: "50%", background: `linear-gradient(135deg, ${accent}dd, ${accent}55)`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 18, color: "#fff", flexShrink: 0, boxShadow: `0 4px 16px ${accent}40` }}>
+                        {(fields.name || "A")[0].toUpperCase()}
+                      </div>
+                      <div style={{ flex: 1 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 3 }}>
+                          <span style={{ fontWeight: 700, fontSize: 14, color: "#e2e8f0" }}>{fields.name || "Your Name"}</span>
+                          {badge && <div style={{ width: 15, height: 15, borderRadius: "50%", background: "#1d9bf0", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ color: "#fff", fontSize: 8 }}>✓</span></div>}
                         </div>
-                        <div style={{ color: "#9ca3af", fontSize: 11, marginBottom: 8 }}>{f.title || "Your Title"}</div>
-                        <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.email || "you@company.com"}</div>
-                        <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 8, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.website || "www.company.com"}</div>
-                        {f.calendly && (
-                          <div style={{ display: "inline-block", padding: "4px 10px", borderRadius: 100, background: c, color: "#fff", fontSize: 10, fontWeight: 600, cursor: "pointer" }}>📅 Book a Meeting</div>
-                        )}
-                      </div>
-                      <div style={{ width: 58, height: 72, borderRadius: 8, background: `linear-gradient(135deg, ${c}35, ${c}08)`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-                        <span style={{ fontWeight: 900, fontSize: 20, color: `${c}90` }}>{(f.name || "Y").charAt(0).toUpperCase()}</span>
-                        <div style={{ position: "absolute", inset: 0, background: `repeating-linear-gradient(45deg, transparent, transparent 4px, ${c}18 4px, ${c}18 5px)`, opacity: 0.4 }} />
-                        <div style={{ position: "absolute", bottom: 4, right: 4, background: "rgba(0,0,0,0.5)", borderRadius: 3, padding: "1px 4px", fontSize: 6, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>GIF</div>
+                        <div style={{ fontSize: 12, color: "#64748b", marginBottom: 8 }}>
+                          {fields.title || "Job Title"}
+                          {fields.company && <> · <span style={{ color: accent, fontWeight: 600 }}>{fields.company}</span></>}
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", gap: 2, marginBottom: 10 }}>
+                          {fields.email && <span style={{ fontSize: 11, color: "#475569" }}><span style={{ color: accent }}>✉ </span>{fields.email}</span>}
+                          {fields.phone && <span style={{ fontSize: 11, color: "#475569" }}><span style={{ color: accent }}>☎ </span>{fields.phone}</span>}
+                        </div>
+                        <div style={{ display: "flex", gap: 5 }}>
+                          {[["in","#0077b5"],["𝕏","#111827"],["🌐",accent],["📅",accent]].map(([ic, bg], i) => (
+                            <div key={i} style={{ width: 22, height: 22, borderRadius: 5, background: bg as string, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: "#fff", fontWeight: 700 }}>{ic}</div>
+                          ))}
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </div>
-
-                {/* GIF placeholder */}
-                <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, border: "1px dashed rgba(255,255,255,0.1)", display: "flex", alignItems: "center", gap: 12 }}>
-                  <div style={{ width: 38, height: 38, borderRadius: 8, background: `linear-gradient(135deg, ${c}25, ${c}08)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>🎬</div>
-                  <div>
-                    <div style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>Hero Product GIF</div>
-                    <div style={{ color: "#4b5563", fontSize: 11 }}>Your brand animation plays here</div>
-                  </div>
-                  <div style={{ marginLeft: "auto", padding: "2px 8px", borderRadius: 100, background: `${c}15`, color: c, fontSize: 10, fontWeight: 700, border: `1px solid ${c}22` }}>Pro</div>
+                  </motion.div>
                 </div>
               </div>
-            </div>
 
-            {/* Actions */}
-            <div style={{ display: "flex", gap: 10 }}>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleCopy}
-                style={{ flex: 1, padding: "14px 0", borderRadius: 12, background: copied ? "#059669" : `linear-gradient(135deg, ${c}, ${c}cc)`, color: "#fff", fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer", boxShadow: `0 0 24px ${c}40` }}>
-                {copied ? "✓ Copied!" : "📋 Copy HTML Code"}
-              </motion.button>
-              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
-                style={{ padding: "14px 20px", borderRadius: 12, background: "rgba(255,255,255,0.05)", color: "#fff", fontWeight: 700, fontSize: 14, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer" }}>
-                💾 Export
-              </motion.button>
+              {/* Copy button */}
+              <div style={{ marginTop: 14, display: "flex", gap: 10 }}>
+                <button onClick={handleCopy} className="btn btn-primary btn-md" style={{ flex: 1, transition: "all 0.2s" }}>
+                  {copied ? "✓ Copied to Clipboard!" : "📋 Copy HTML Signature"}
+                </button>
+                <a href="#pricing" className="btn btn-ghost btn-md" style={{ fontSize: 13 }}>Upgrade →</a>
+              </div>
+              <p style={{ textAlign: "center", fontSize: 12, color: "#334155", marginTop: 10 }}>Paste directly into Gmail, Outlook, Apple Mail & more</p>
             </div>
           </motion.div>
         </div>

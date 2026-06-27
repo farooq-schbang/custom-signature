@@ -1,263 +1,207 @@
 "use client";
-import { motion, useMotionValue, useTransform, animate, useSpring } from "framer-motion";
-import { useEffect, useRef, useState } from "react";
+import { motion, useMotionValue, useSpring, useTransform } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 
-const SIGS = [
-  { name: "Sarah Chen", title: "VP of Marketing", company: "Stripe", email: "sarah@stripe.com", website: "stripe.com", color: "#635BFF", initial: "S", cta: "Book a Demo" },
-  { name: "Marcus Rivera", title: "Head of Growth", company: "Linear", email: "marcus@linear.app", website: "linear.app", color: "#5E6AD2", initial: "M", cta: "Schedule Call" },
-  { name: "Priya Kapoor", title: "Chief Revenue Officer", company: "Notion", email: "priya@notion.so", website: "notion.so", color: "#7C3AED", initial: "P", cta: "Book Meeting" },
-  { name: "James Wilson", title: "Director of Sales", company: "Figma", email: "j.wilson@figma.com", website: "figma.com", color: "#F24E1E", initial: "J", cta: "Book a Call" },
+const SIGNATURES = [
+  { name: "Sarah Chen", title: "VP of Sales", company: "Salesforce", email: "sarah.chen@salesforce.com", phone: "+1 (415) 555-0192", accent: "#00A1E0", logo: "S", badge: true },
+  { name: "Marcus Rivera", title: "Co-Founder & CEO", company: "Linear", email: "marcus@linear.app", phone: "+1 (650) 555-0847", accent: "#5E6AD2", logo: "L", badge: true },
+  { name: "Jennifer Park", title: "Head of Growth", company: "Stripe", email: "jpark@stripe.com", phone: "+1 (415) 555-3021", accent: "#635BFF", logo: "S", badge: false },
 ];
 
-const LOGOS = ["Goldman Sachs","McKinsey & Co.","Salesforce","Microsoft","Google","Amazon","JPMorgan","Deloitte","Apple","Meta","Netflix","Adobe","Stripe","Notion","Linear","Figma"];
+const LOGOS = [
+  "Salesforce","Google","Microsoft","Amazon","Meta","Stripe","Notion","Linear","Figma","Vercel","Shopify","HubSpot","Slack","Twilio","Atlassian","Zoom",
+  "Salesforce","Google","Microsoft","Amazon","Meta","Stripe","Notion","Linear","Figma","Vercel","Shopify","HubSpot","Slack","Twilio","Atlassian","Zoom",
+];
 
-function CountUp({ to, suffix = "" }: { to: number; suffix?: string }) {
-  const ref = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const node = ref.current;
-    if (!node) return;
-    const c = animate(0, to, { duration: 2, ease: "easeOut", onUpdate(v) { node.textContent = Math.round(v) + suffix; } });
-    return () => c.stop();
-  }, [to, suffix]);
-  return <span ref={ref}>0{suffix}</span>;
-}
-
-function SigCard({ sig }: { sig: typeof SIGS[0] }) {
-  const c = sig.color;
+function SignaturePreview({ sig }: { sig: typeof SIGNATURES[0] }) {
   return (
-    <div style={{ background: "#0a0a18", border: `1px solid ${c}30`, borderRadius: 12 }}>
-      <div style={{ display: "flex" }}>
-        {/* accent bar */}
-        <div style={{ width: 3, flexShrink: 0, background: `linear-gradient(180deg, ${c}, ${c}40)`, borderRadius: "12px 0 0 12px" }} />
-        {/* social icons */}
-        <div style={{ display: "flex", flexDirection: "column", gap: 8, padding: "14px 10px", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
-          {["🌐","in","▶","𝕏","📸"].map((icon, i) => (
-            <div key={i} style={{ width: 24, height: 24, borderRadius: "50%", background: `${c}18`, border: `1px solid ${c}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, cursor: "pointer" }}>
-              {icon}
-            </div>
-          ))}
-        </div>
-        {/* info */}
-        <div style={{ flex: 1, padding: "14px 14px", display: "flex", gap: 12, alignItems: "center" }}>
-          <div style={{ flex: 1 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 6, marginBottom: 8 }}>
-              <span style={{ fontWeight: 800, fontSize: 12, color: c }}>{sig.company}</span>
-              <span style={{ color: "#60a5fa", fontSize: 10 }}>✓</span>
-            </div>
-            <div style={{ color: "#fff", fontWeight: 700, fontSize: 13, marginBottom: 2 }}>{sig.name}</div>
-            <div style={{ color: "#9ca3af", fontSize: 11, marginBottom: 10 }}>{sig.title}</div>
-            <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 2 }}>{sig.email}</div>
-            <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 10 }}>{sig.website}</div>
-            <div style={{ display: "inline-block", padding: "5px 12px", borderRadius: 100, background: c, color: "#fff", fontSize: 10, fontWeight: 600, cursor: "pointer" }}>
-              📅 {sig.cta}
-            </div>
+    <div style={{ borderTop: `3px solid ${sig.accent}`, paddingTop: 16, fontFamily: "Georgia,serif", userSelect: "none" }}>
+      <div style={{ display: "flex", gap: 14, alignItems: "flex-start" }}>
+        <div style={{ width: 48, height: 48, borderRadius: "50%", background: `linear-gradient(135deg, ${sig.accent}cc, ${sig.accent}44)`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 18, color: "#fff", flexShrink: 0, boxShadow: `0 4px 16px ${sig.accent}44` }}>{sig.name[0]}</div>
+        <div style={{ flex: 1 }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 7, marginBottom: 2 }}>
+            <span style={{ fontWeight: 700, fontSize: 14, color: "#111827", fontFamily: "Inter,sans-serif" }}>{sig.name}</span>
+            {sig.badge && <div style={{ width: 15, height: 15, borderRadius: "50%", background: "#1d9bf0", display: "flex", alignItems: "center", justifyContent: "center" }}><span style={{ color: "#fff", fontSize: 8, fontWeight: 900 }}>✓</span></div>}
           </div>
-          {/* avatar */}
-          <div style={{ width: 64, height: 78, borderRadius: 10, background: `linear-gradient(135deg, ${c}35, ${c}08)`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
-            <span style={{ fontWeight: 900, fontSize: 22, color: `${c}90` }}>{sig.initial}</span>
-            <div style={{ position: "absolute", inset: 0, background: `repeating-linear-gradient(45deg, transparent, transparent 4px, ${c}18 4px, ${c}18 5px)`, opacity: 0.4 }} />
-            <div style={{ position: "absolute", bottom: 5, right: 5, background: "rgba(0,0,0,0.55)", borderRadius: 4, padding: "1px 4px", fontSize: 7, fontWeight: 700, color: "rgba(255,255,255,0.6)", border: "1px solid rgba(255,255,255,0.1)" }}>GIF</div>
+          <div style={{ fontSize: 12, color: "#6b7280", fontFamily: "Inter,sans-serif", marginBottom: 8 }}>{sig.title} · <span style={{ color: sig.accent, fontWeight: 600 }}>{sig.company}</span></div>
+          <div style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 10 }}>
+            <span style={{ fontSize: 11, color: "#9ca3af", fontFamily: "Inter,sans-serif" }}><span style={{ color: sig.accent }}>✉ </span>{sig.email}</span>
+            <span style={{ fontSize: 11, color: "#9ca3af", fontFamily: "Inter,sans-serif" }}><span style={{ color: sig.accent }}>☎ </span>{sig.phone}</span>
+          </div>
+          <div style={{ display: "flex", gap: 5 }}>
+            {[["in","#0077b5"],["𝕏","#111"],["🌐",sig.accent],["▶","#ff0000"]].map(([ic, bg], i) => (
+              <div key={i} style={{ width: 22, height: 22, borderRadius: 5, background: bg as string, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, color: "#fff", fontWeight: 700 }}>{ic}</div>
+            ))}
           </div>
         </div>
+        <div style={{ width: 34, height: 34, borderRadius: 8, background: `${sig.accent}18`, border: `1px solid ${sig.accent}30`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, fontSize: 14, color: sig.accent, flexShrink: 0 }}>{sig.logo}</div>
       </div>
     </div>
   );
 }
 
 export function Hero() {
-  const [active, setActive] = useState(0);
-  const mouseX = useMotionValue(0);
-  const mouseY = useMotionValue(0);
-  const rx = useSpring(useTransform(mouseY, [-300, 300], [6, -6]), { stiffness: 60, damping: 18 });
-  const ry = useSpring(useTransform(mouseX, [-300, 300], [-6, 6]), { stiffness: 60, damping: 18 });
+  const ref = useRef<HTMLDivElement>(null);
+  const [sigIndex, setSigIndex] = useState(0);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const t = setInterval(() => setActive(i => (i + 1) % SIGS.length), 3500);
+    setMounted(true);
+    const t = setInterval(() => setSigIndex(i => (i + 1) % SIGNATURES.length), 3200);
     return () => clearInterval(t);
   }, []);
 
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+  const springX = useSpring(mouseX, { stiffness: 50, damping: 20 });
+  const springY = useSpring(mouseY, { stiffness: 50, damping: 20 });
+  const rotateX = useTransform(springY, [-200, 200], [5, -5]);
+  const rotateY = useTransform(springX, [-200, 200], [-5, 5]);
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    const el = ref.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left - rect.width / 2);
+    mouseY.set(e.clientY - rect.top - rect.height / 2);
+  };
+
   return (
-    <section style={{ background: "#06060f", minHeight: "100vh", position: "relative", overflow: "hidden" }}>
-      {/* Background grid */}
-      <div className="grid-bg" style={{ position: "absolute", inset: 0, opacity: 0.6 }} />
-      {/* Glow orbs */}
-      <div style={{ position: "absolute", top: -100, left: "30%", width: 600, height: 400, background: "rgba(37,99,235,0.1)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none" }} />
-      <div style={{ position: "absolute", top: "40%", right: -100, width: 400, height: 400, background: "rgba(124,58,237,0.07)", borderRadius: "50%", filter: "blur(80px)", pointerEvents: "none" }} />
+    <section style={{ position: "relative", overflow: "hidden", background: "#020208", minHeight: "100vh", display: "flex", flexDirection: "column" }}>
+      {/* Aurora blobs */}
+      <div aria-hidden style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        <motion.div animate={{ scale: [1, 1.2, 1], opacity: [0.4, 0.65, 0.4] }} transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+          style={{ position: "absolute", width: 900, height: 900, borderRadius: "50%", left: "0%", top: "-35%", background: "radial-gradient(circle, rgba(37,99,235,0.2) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <motion.div animate={{ scale: [1, 1.15, 1], opacity: [0.25, 0.5, 0.25] }} transition={{ duration: 13, repeat: Infinity, ease: "easeInOut", delay: 3 }}
+          style={{ position: "absolute", width: 700, height: 700, borderRadius: "50%", right: "0%", top: "-15%", background: "radial-gradient(circle, rgba(124,58,237,0.16) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <motion.div animate={{ scale: [1, 1.1, 1], opacity: [0.15, 0.3, 0.15] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 5 }}
+          style={{ position: "absolute", width: 600, height: 600, borderRadius: "50%", left: "35%", bottom: "-10%", background: "radial-gradient(circle, rgba(6,182,212,0.1) 0%, transparent 70%)", filter: "blur(60px)" }} />
+        <div className="grid-bg" style={{ position: "absolute", inset: 0, opacity: 0.3 }} />
+        <div style={{ position: "absolute", bottom: 0, left: 0, right: 0, height: 240, background: "linear-gradient(to bottom, transparent, #020208)" }} />
+      </div>
 
       <Container>
-        <div style={{ paddingTop: 112, paddingBottom: 48, display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+        <div style={{ paddingTop: 136, paddingBottom: 64, display: "flex", flexDirection: "column", flex: 1 }}>
 
-          {/* Social proof badge */}
-          <motion.div initial={{ opacity: 0, y: -12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
-            style={{ display: "flex", justifyContent: "center", marginBottom: 48 }}>
-            <div style={{ display: "inline-flex", alignItems: "center", gap: 16, padding: "8px 20px", borderRadius: 100, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", fontSize: 12 }}>
-              <span style={{ fontWeight: 700, color: "#fff", letterSpacing: "0.02em" }}>G2</span>
-              <span style={{ color: "#fbbf24", letterSpacing: 1 }}>★★★★★</span>
-              <span style={{ color: "#6b7280" }}>5.0</span>
-              <span style={{ width: 1, height: 12, background: "rgba(255,255,255,0.15)", display: "inline-block" }} />
-              <span style={{ fontWeight: 700, background: "linear-gradient(90deg,#4285F4,#EA4335,#FBBC05,#34A853)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent" }}>Google</span>
-              <span style={{ color: "#fbbf24", letterSpacing: 1 }}>★★★★★</span>
-              <span style={{ color: "#6b7280" }}>5.0</span>
-              <span style={{ width: 1, height: 12, background: "rgba(255,255,255,0.15)", display: "inline-block" }} />
-              <span style={{ color: "#9ca3af" }}>Trusted by <strong style={{ color: "#fff" }}>50,000+</strong> professionals</span>
+          {/* Social proof chip */}
+          <motion.div initial={{ opacity: 0, y: -10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }} style={{ display: "flex", justifyContent: "center", marginBottom: 36 }}>
+            <div style={{ display: "inline-flex", alignItems: "center", gap: 10, padding: "6px 16px 6px 8px", borderRadius: 100, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.09)" }}>
+              <div style={{ display: "flex" }}>
+                {["#3b82f6","#7c3aed","#10b981","#ef4444","#f59e0b"].map((c, i) => (
+                  <div key={i} style={{ width: 22, height: 22, borderRadius: "50%", background: c, border: "2px solid #020208", marginLeft: i > 0 ? -7 : 0, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 8, fontWeight: 800, color: "#fff" }}>
+                    {["S","M","J","D","L"][i]}
+                  </div>
+                ))}
+              </div>
+              <div style={{ display: "flex", gap: 1 }}>{"★★★★★".split("").map((s, i) => <span key={i} style={{ color: "#fbbf24", fontSize: 10 }}>{s}</span>)}</div>
+              <span style={{ fontSize: 12, color: "#94a3b8" }}>Loved by <strong style={{ color: "#e2e8f0", fontWeight: 700 }}>50,000+</strong> professionals</span>
             </div>
           </motion.div>
 
-          {/* Main two-column hero */}
-          <div style={{ display: "flex", gap: 64, alignItems: "center", flex: 1 }}>
-            {/* Left — text */}
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}>
-                <div className="pill pill-blue" style={{ marginBottom: 24 }}>
-                  <motion.span animate={{ scale: [1,1.4,1] }} transition={{ duration: 2, repeat: Infinity }} style={{ width: 6, height: 6, borderRadius: "50%", background: "#60a5fa", display: "inline-block" }} />
-                  World&apos;s Most Advanced Email Signature Platform
+          {/* Headline */}
+          <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.08 }} style={{ textAlign: "center", marginBottom: 24 }}>
+            <h1 className="display-xl" style={{ color: "#fff", marginBottom: 8 }}>
+              Your Email Signature
+              <br />
+              <span className="grad-aurora">Closes Deals.</span>
+            </h1>
+            <p style={{ fontSize: 18, color: "#94a3b8", maxWidth: 500, margin: "0 auto", lineHeight: 1.7 }}>
+              Build a premium animated signature in 2 minutes. Look like a Fortune 500 executive in every inbox.
+            </p>
+          </motion.div>
+
+          {/* CTA buttons */}
+          <motion.div initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.2 }} style={{ display: "flex", justifyContent: "center", gap: 12, flexWrap: "wrap", marginBottom: 14 }}>
+            <a href="#builder" className="btn btn-primary btn-lg">✦ Build My Signature — Free</a>
+            <a href="#compare" className="btn btn-ghost btn-lg">See Examples →</a>
+          </motion.div>
+
+          {/* Trust signals */}
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.35 }} style={{ display: "flex", justifyContent: "center", gap: 24, marginBottom: 72, flexWrap: "wrap" }}>
+            {["No credit card","2-minute setup","Free forever"].map(t => (
+              <span key={t} style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 13, color: "#475569" }}>
+                <span style={{ color: "#22c55e" }}>✓</span> {t}
+              </span>
+            ))}
+          </motion.div>
+
+          {/* Email window mockup */}
+          <motion.div ref={ref} initial={{ opacity: 0, y: 48 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.8, delay: 0.3 }}
+            onMouseMove={handleMouseMove} onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
+            style={{ position: "relative", maxWidth: 680, margin: "0 auto", width: "100%", perspective: 1200 }}
+          >
+            {/* Floating stat: left */}
+            <motion.div className="animate-float" style={{ position: "absolute", left: -110, top: 40, zIndex: 20, background: "rgba(13,13,26,0.92)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "14px 18px", minWidth: 148, boxShadow: "0 20px 50px rgba(0,0,0,0.5)" }}>
+              <div style={{ fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>+38%</div>
+              <div style={{ fontSize: 12, color: "#64748b", marginTop: 1 }}>Reply rate boost</div>
+              <div style={{ display: "flex", alignItems: "center", gap: 5, marginTop: 8 }}>
+                <div style={{ width: 6, height: 6, borderRadius: "50%", background: "#22c55e" }} className="animate-pulse-dot" />
+                <span style={{ fontSize: 10, color: "#22c55e" }}>Live analytics</span>
+              </div>
+            </motion.div>
+
+            {/* Floating stat: right */}
+            <motion.div className="animate-float-delayed" style={{ position: "absolute", right: -100, top: 30, zIndex: 20, background: "rgba(13,13,26,0.92)", backdropFilter: "blur(16px)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 14, padding: "14px 18px", minWidth: 136, boxShadow: "0 20px 50px rgba(0,0,0,0.5)" }}>
+              <div style={{ fontSize: 24, fontWeight: 900, color: "#fff", letterSpacing: "-0.03em" }}>50K+</div>
+              <div style={{ fontSize: 12, color: "#64748b", marginTop: 1 }}>Professionals</div>
+              <div style={{ fontSize: 11, color: "#a78bfa", marginTop: 8 }}>↑ 12% this month</div>
+            </motion.div>
+
+            {/* Mac window */}
+            <motion.div style={{ rotateX, rotateY, transformStyle: "preserve-3d" }}>
+              <div className="mac-window">
+                <div className="mac-titlebar">
+                  <div className="mac-dot" style={{ background: "#ff5f57" }} />
+                  <div className="mac-dot" style={{ background: "#febc2e" }} />
+                  <div className="mac-dot" style={{ background: "#28c840" }} />
+                  <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
+                    <div style={{ background: "rgba(255,255,255,0.05)", borderRadius: 6, padding: "3px 20px", fontSize: 12, color: "#475569" }}>Gmail — Compose</div>
+                  </div>
                 </div>
-              </motion.div>
-
-              <motion.h1 initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.18 }}
-                style={{ fontSize: "clamp(42px, 5vw, 68px)", fontWeight: 900, lineHeight: 1.05, letterSpacing: "-0.03em", marginBottom: 20 }}>
-                Your Email.
-                <br />
-                <span className="text-gradient-hero">Their First</span>
-                <br />
-                Impression.
-              </motion.h1>
-
-              <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.28 }}
-                style={{ fontSize: 17, color: "#9ca3af", lineHeight: 1.7, maxWidth: 460, marginBottom: 32 }}>
-                The only AI-powered signature with an interactive social nav, animated brand logo,
-                GIF showcase, and one-click calendar booking — used by Fortune 500 professionals.
-              </motion.p>
-
-              {/* Stats */}
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.36 }}
-                style={{ display: "flex", gap: 32, marginBottom: 36 }}>
-                {[{ n: 42, s: "%", l: "Higher Reply Rate" }, { n: 3, s: "×", l: "More Link Clicks" }, { n: 50, s: "k+", l: "Active Users" }].map(st => (
-                  <div key={st.l}>
-                    <div style={{ fontSize: 28, fontWeight: 900, color: "#fff", letterSpacing: "-0.02em" }}>
-                      <CountUp to={st.n} suffix={st.s} />
-                    </div>
-                    <div style={{ fontSize: 12, color: "#6b7280", marginTop: 2 }}>{st.l}</div>
+                <div style={{ padding: "0 20px 20px", background: "#0e0e1a" }}>
+                  <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "10px 0", fontSize: 13 }}>
+                    <span style={{ color: "#334155", marginRight: 12 }}>To:</span><span style={{ color: "#94a3b8" }}>team@fortune500.com</span>
                   </div>
-                ))}
-              </motion.div>
-
-              {/* CTAs */}
-              <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.44 }}
-                style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 16 }}>
-                <a href="#builder" className="btn btn-primary btn-lg">✦ Create Your Signature Free</a>
-                <a href="#compare" className="btn btn-ghost btn-lg">See the Difference →</a>
-              </motion.div>
-
-              <motion.p initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.6 }}
-                style={{ fontSize: 12, color: "#4b5563" }}>
-                No credit card · Setup in 2 min · Works with Gmail, Outlook & 1000+ apps
-              </motion.p>
-            </div>
-
-            {/* Right — email mockup */}
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.3, duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-              style={{ flex: 1, minWidth: 0, perspective: 1200 }}
-              onMouseMove={e => {
-                const r = e.currentTarget.getBoundingClientRect();
-                mouseX.set(e.clientX - r.left - r.width / 2);
-                mouseY.set(e.clientY - r.top - r.height / 2);
-              }}
-              onMouseLeave={() => { mouseX.set(0); mouseY.set(0); }}
-            >
-              <motion.div style={{ rotateX: rx, rotateY: ry, transformStyle: "preserve-3d" }}>
-                <div className="email-surface">
-                  {/* Chrome bar */}
-                  <div style={{ padding: "12px 16px", borderBottom: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.02)" }}>
-                    <div style={{ display: "flex", gap: 6 }}>
-                      <div style={{ width: 11, height: 11, borderRadius: "50%", background: "rgba(255,69,58,0.7)" }} />
-                      <div style={{ width: 11, height: 11, borderRadius: "50%", background: "rgba(255,196,0,0.7)" }} />
-                      <div style={{ width: 11, height: 11, borderRadius: "50%", background: "rgba(40,200,64,0.7)" }} />
-                    </div>
-                    <span style={{ fontSize: 11, color: "#4b5563", marginLeft: 8 }}>Gmail — New Message</span>
+                  <div style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", padding: "10px 0", fontSize: 13 }}>
+                    <span style={{ color: "#334155", marginRight: 12 }}>Subject:</span><span style={{ color: "#e2e8f0", fontWeight: 500 }}>Q4 Partnership Proposal — Following Up</span>
                   </div>
-
-                  {/* Email header fields */}
-                  <div style={{ padding: "12px 18px", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
-                    {[["From","CustomSignature <hello@customsig.com>"],["To","john.smith@fortune500.com"],["Subject","Following up on our partnership"]].map(([k,v]) => (
-                      <div key={k} style={{ display: "flex", gap: 12, marginBottom: 6, fontSize: 11 }}>
-                        <span style={{ color: "#4b5563", width: 48, flexShrink: 0 }}>{k}</span>
-                        <span style={{ color: k === "Subject" ? "#e5e7eb" : "#9ca3af", fontWeight: k === "Subject" ? 500 : 400 }}>{v}</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  {/* Body */}
-                  <div style={{ padding: 18 }}>
-                    <p style={{ color: "#6b7280", fontSize: 13, marginBottom: 8 }}>Hi John,</p>
-                    <div style={{ marginBottom: 6 }}>
-                      {[0.83, 0.66, 0.5].map((w, i) => <div key={i} style={{ height: 8, background: "rgba(255,255,255,0.07)", borderRadius: 4, marginBottom: 6, width: `${w * 100}%` }} />)}
-                    </div>
-                    <p style={{ color: "#6b7280", fontSize: 13, marginTop: 12, marginBottom: 14 }}>Warm regards,</p>
-                    <div style={{ height: 1, background: "rgba(255,255,255,0.06)", marginBottom: 14 }} />
-
-                    {/* Signature carousel */}
-                    <div style={{ position: "relative", minHeight: 120 }}>
-                      {SIGS.map((sig, i) => (
-                        <motion.div key={i}
-                          animate={{ opacity: i === active ? 1 : 0, y: i === active ? 0 : 8 }}
-                          transition={{ duration: 0.35 }}
-                          style={{ position: i === 0 ? "relative" : "absolute", inset: i === 0 ? undefined : 0, pointerEvents: i === active ? "auto" : "none" }}
+                  <div style={{ padding: "16px 0 0", fontSize: 13, color: "#94a3b8", lineHeight: 1.8 }}>
+                    <p>Hi Alex,</p>
+                    <p style={{ margin: "8px 0" }}>Following up on our call last week. Attaching the revised proposal with updated terms for Q4.</p>
+                    <p>Looking forward to connecting.</p>
+                    <div style={{ position: "relative", minHeight: 110, marginTop: 4 }}>
+                      {mounted && SIGNATURES.map((sig, i) => (
+                        <motion.div key={sig.name} initial={false}
+                          animate={{ opacity: i === sigIndex ? 1 : 0, y: i === sigIndex ? 0 : 6 }}
+                          transition={{ duration: 0.5 }}
+                          style={{ position: i === 0 ? "relative" : "absolute", inset: 0 }}
                         >
-                          {(i === 0 || i === active) && <SigCard sig={i === active ? SIGS[active] : SIGS[0]} />}
+                          <SignaturePreview sig={sig} />
                         </motion.div>
                       ))}
                     </div>
-
-                    {/* Dots & toggle */}
-                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginTop: 12, paddingTop: 10, borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                        <div style={{ width: 36, height: 20, borderRadius: 10, background: "#2563eb", position: "relative", cursor: "pointer" }}>
-                          <div style={{ position: "absolute", right: 3, top: 3, width: 14, height: 14, borderRadius: "50%", background: "#fff" }} />
-                        </div>
-                        <span style={{ fontSize: 11, color: "#6b7280" }}>Signature active</span>
-                      </div>
-                      <div style={{ display: "flex", gap: 5 }}>
-                        {SIGS.map((_, i) => (
-                          <button key={i} onClick={() => setActive(i)}
-                            style={{ height: 5, borderRadius: 3, background: i === active ? "#60a5fa" : "rgba(255,255,255,0.2)", width: i === active ? 20 : 5, border: "none", cursor: "pointer", transition: "all 0.3s" }} />
-                        ))}
-                      </div>
-                    </div>
                   </div>
                 </div>
-
-                {/* Floating badge */}
-                <motion.div
-                  animate={{ y: [0, -7, 0] }}
-                  transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-                  style={{ position: "absolute", top: -12, right: -12, padding: "6px 14px", borderRadius: 100, background: "linear-gradient(135deg, #2563eb, #7c3aed)", color: "#fff", fontSize: 11, fontWeight: 700, boxShadow: "0 4px 20px rgba(37,99,235,0.45)" }}
-                >
-                  {SIGS[active].company}
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          </div>
-
-          {/* Logo strip */}
-          <div style={{ borderTop: "1px solid rgba(255,255,255,0.06)", paddingTop: 28, marginTop: 32, overflow: "hidden" }}>
-            <p style={{ textAlign: "center", fontSize: 11, color: "#4b5563", letterSpacing: "0.18em", textTransform: "uppercase", marginBottom: 16 }}>
-              Trusted by professionals at
-            </p>
-            <div style={{ display: "flex", overflow: "hidden" }}>
-              <div className="animate-marquee" style={{ display: "flex", gap: 48, whiteSpace: "nowrap", flexShrink: 0 }}>
-                {[...LOGOS, ...LOGOS].map((l, i) => (
-                  <span key={i} style={{ color: "#374151", fontWeight: 600, fontSize: 13 }}>{l}</span>
-                ))}
               </div>
-            </div>
-          </div>
+            </motion.div>
+            {/* Glow */}
+            <div style={{ position: "absolute", bottom: -50, left: "15%", right: "15%", height: 70, background: "radial-gradient(ellipse, rgba(37,99,235,0.28) 0%, transparent 70%)", filter: "blur(20px)", pointerEvents: "none" }} />
+          </motion.div>
         </div>
       </Container>
+
+      {/* Logo marquee */}
+      <div style={{ padding: "36px 0 56px", borderTop: "1px solid rgba(255,255,255,0.05)", overflow: "hidden", position: "relative" }}>
+        <div style={{ position: "absolute", left: 0, top: 0, bottom: 0, width: 140, background: "linear-gradient(to right, #020208, transparent)", zIndex: 10 }} />
+        <div style={{ position: "absolute", right: 0, top: 0, bottom: 0, width: 140, background: "linear-gradient(to left, #020208, transparent)", zIndex: 10 }} />
+        <p style={{ textAlign: "center", fontSize: 11, color: "#1e293b", textTransform: "uppercase", letterSpacing: "0.14em", marginBottom: 18, fontWeight: 700 }}>Trusted by professionals at</p>
+        <div className="animate-marquee">
+          {LOGOS.map((name, i) => (
+            <div key={i} style={{ padding: "0 36px", fontSize: 13, fontWeight: 700, color: "#1e293b", whiteSpace: "nowrap", userSelect: "none" }}>{name}</div>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
