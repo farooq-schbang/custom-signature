@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
+  basePath: "/custom-signature",
+  assetPrefix: "/custom-signature",
 };
 
 export default nextConfig;
