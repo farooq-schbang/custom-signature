@@ -1,161 +1,70 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Container } from "@/components/ui/Container";
 
-const FEATURES = [
-  {
-    icon: "🎬",
-    title: "Animated GIF Showcase",
-    desc: "Embed a looping brand animation that plays directly in inboxes — no plugins, no attachments, instant wow factor.",
-    tag: "Exclusive",
-    color: "#2563eb",
-    glow: "rgba(37,99,235,0.15)",
-  },
-  {
-    icon: "📅",
-    title: "One-Click Calendar",
-    desc: "Calendly, Cal.com, or Google Meet — let anyone book time with you right from your email footer.",
-    tag: "Productivity",
-    color: "#7c3aed",
-    glow: "rgba(124,58,237,0.15)",
-  },
-  {
-    icon: "⚡",
-    title: "Interactive Social Nav",
-    desc: "A sleek vertical sidebar of animated social icons that react on hover. Website, LinkedIn, YouTube, Instagram and more.",
-    tag: "Unique",
-    color: "#0891b2",
-    glow: "rgba(8,145,178,0.15)",
-  },
-  {
-    icon: "✅",
-    title: "Verified Trust Badge",
-    desc: "The blue verified checkmark next to your name. Establishes instant authority and credibility with every email.",
-    tag: "Trust",
-    color: "#1d9bf0",
-    glow: "rgba(29,155,240,0.15)",
-  },
-  {
-    icon: "🤖",
-    title: "AI-Generated Design",
-    desc: "Feed it your brand colors and industry — our AI crafts a pixel-perfect signature that feels handcrafted by a designer.",
-    tag: "AI Powered",
-    color: "#059669",
-    glow: "rgba(5,150,105,0.15)",
-  },
-  {
-    icon: "🌐",
-    title: "1000+ Platform Support",
-    desc: "Works natively in Gmail, Outlook, Apple Mail, Superhuman, HubSpot, Salesforce, and every major CRM.",
-    tag: "Universal",
-    color: "#d97706",
-    glow: "rgba(217,119,6,0.15)",
-  },
-  {
-    icon: "📊",
-    title: "Analytics & A/B Testing",
-    desc: "Track opens, link clicks, and signature engagement. A/B test designs to find what drives the most conversions.",
-    tag: "Data-Driven",
-    color: "#dc2626",
-    glow: "rgba(220,38,38,0.15)",
-  },
-  {
-    icon: "👥",
-    title: "Team Management",
-    desc: "Deploy brand-compliant signatures across your entire organization with central admin controls and bulk sync.",
-    tag: "Enterprise",
-    color: "#7c3aed",
-    glow: "rgba(124,58,237,0.15)",
-  },
+const FEATS = [
+  { icon: "🎬", title: "Animated GIF Showcase", desc: "Looping brand animation plays directly in inboxes — no plugins, no attachments.", tag: "Exclusive", color: "#2563eb" },
+  { icon: "📅", title: "One-Click Calendar", desc: "Calendly, Cal.com, or Google Meet — let anyone book you right from your email.", tag: "Productivity", color: "#7c3aed" },
+  { icon: "⚡", title: "Interactive Social Nav", desc: "Animated vertical icon sidebar for Website, LinkedIn, YouTube, Instagram and more.", tag: "Unique", color: "#0891b2" },
+  { icon: "✅", title: "Verified Trust Badge", desc: "Blue verified checkmark next to your name — instant authority with every email.", tag: "Trust", color: "#1d9bf0" },
+  { icon: "🤖", title: "AI-Generated Design", desc: "Feed your brand colors and industry. Our AI crafts a pixel-perfect signature.", tag: "AI Powered", color: "#059669" },
+  { icon: "🌐", title: "1000+ Platform Support", desc: "Works natively in Gmail, Outlook, Superhuman, HubSpot, Salesforce and more.", tag: "Universal", color: "#d97706" },
+  { icon: "📊", title: "Analytics & A/B Testing", desc: "Track clicks and engagement. A/B test designs to find what converts best.", tag: "Data-Driven", color: "#dc2626" },
+  { icon: "👥", title: "Team Management", desc: "Deploy brand-compliant signatures across your entire org with bulk controls.", tag: "Enterprise", color: "#7c3aed" },
 ];
-
-const containerVariants = {
-  hidden: {},
-  visible: { transition: { staggerChildren: 0.06 } },
-};
-const cardVariants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
 
 export function Features() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
 
   return (
-    <section ref={ref} id="features" className="py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="absolute inset-0" style={{ background: "linear-gradient(180deg, transparent 0%, rgba(4,4,9,0.8) 30%, rgba(4,4,9,0.8) 70%, transparent 100%)" }} />
-      <div className="orb absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px]" style={{ background: "rgba(124,58,237,0.06)" }} />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-20"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-5"
-            style={{ background: "rgba(124,58,237,0.12)", border: "1px solid rgba(124,58,237,0.25)", color: "#a78bfa" }}>
-            ✦ Features
-          </div>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.05] mb-5">
+    <section id="features" ref={ref} style={{ padding: "96px 0", background: "linear-gradient(180deg, #06060f 0%, #08091a 50%, #06060f 100%)" }}>
+      <Container>
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
+          <div className="pill pill-violet" style={{ marginBottom: 16 }}>✦ Features</div>
+          <h2 style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16 }}>
             Nothing Else
             <br />
-            <span style={{ background: "linear-gradient(135deg, #a78bfa 0%, #ec4899 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
+            <span className="text-gradient-blue" style={{ background: "linear-gradient(135deg, #a78bfa 0%, #ec4899 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
               Like It
             </span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto leading-relaxed">
-            Every element engineered to build trust, drive engagement, and make you unforgettable — all in one email footer.
+          <p style={{ fontSize: 17, color: "#9ca3af", maxWidth: 520, margin: "0 auto", lineHeight: 1.65 }}>
+            Every element engineered to build trust, drive clicks, and make you unforgettable — all in one email footer.
           </p>
         </motion.div>
 
-        {/* Grid */}
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate={inView ? "visible" : "hidden"}
-          className="grid md:grid-cols-2 lg:grid-cols-4 gap-4"
-        >
-          {FEATURES.map((feat) => (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+          {FEATS.map((f, i) => (
             <motion.div
-              key={feat.title}
-              variants={cardVariants}
-              className="group relative rounded-2xl p-5 overflow-hidden cursor-default"
-              style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}
-              whileHover={{
-                background: feat.glow,
-                borderColor: `${feat.color}30`,
-                y: -4,
-                transition: { duration: 0.2 }
-              }}
+              key={f.title}
+              initial={{ opacity: 0, y: 28 }}
+              animate={inView ? { opacity: 1, y: 0 } : {}}
+              transition={{ delay: i * 0.06, duration: 0.5 }}
+              className="card"
+              style={{ padding: 24, position: "relative", overflow: "hidden", cursor: "default", transition: "all 0.2s" }}
+              whileHover={{ y: -4, borderColor: `${f.color}30`, backgroundColor: `${f.color}08`, transition: { duration: 0.2 } }}
             >
-              {/* Top highlight line */}
-              <div className="absolute top-0 left-0 right-0 h-px opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                style={{ background: `linear-gradient(90deg, transparent, ${feat.color}, transparent)` }} />
+              {/* Top accent on hover */}
+              <div style={{ position: "absolute", top: 0, left: 0, right: 0, height: 2, background: `linear-gradient(90deg, transparent, ${f.color}, transparent)`, opacity: 0 }}
+                className="feat-accent" />
 
-              {/* Icon */}
-              <div className="w-11 h-11 rounded-xl flex items-center justify-center text-2xl mb-4"
-                style={{ background: `${feat.color}18`, border: `1px solid ${feat.color}25` }}>
-                {feat.icon}
-              </div>
-
-              {/* Tag + Title */}
-              <div className="flex items-start justify-between gap-2 mb-2">
-                <h3 className="font-bold text-white text-sm leading-snug">{feat.title}</h3>
-                <span className="text-xs font-semibold px-2 py-0.5 rounded-full flex-shrink-0 mt-0.5"
-                  style={{ background: `${feat.color}18`, color: feat.color }}>
-                  {feat.tag}
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 16 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${f.color}18`, border: `1px solid ${f.color}22`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>
+                  {f.icon}
+                </div>
+                <span style={{ fontSize: 10, fontWeight: 700, padding: "3px 8px", borderRadius: 100, background: `${f.color}18`, color: f.color, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                  {f.tag}
                 </span>
               </div>
 
-              <p className="text-gray-500 text-xs leading-relaxed">{feat.desc}</p>
+              <div style={{ fontWeight: 700, color: "#fff", fontSize: 14, marginBottom: 8 }}>{f.title}</div>
+              <p style={{ fontSize: 12, color: "#6b7280", lineHeight: 1.65 }}>{f.desc}</p>
             </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      </Container>
     </section>
   );
 }

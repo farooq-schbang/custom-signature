@@ -1,45 +1,46 @@
 "use client";
-import { motion } from "framer-motion";
+import { Container } from "@/components/ui/Container";
 
 const LINKS = {
-  Product: ["Features", "Pricing", "Builder", "Templates", "Integrations", "API"],
-  Company: ["About", "Blog", "Careers", "Press Kit", "Partners"],
-  Support: ["Help Center", "Contact Us", "Status", "Privacy Policy", "Terms of Service"],
-  Enterprise: ["Fortune 500 Solutions", "Team Management", "Security", "Compliance", "White-label"],
+  Product: ["Features","Pricing","Builder","Templates","Integrations","API"],
+  Company: ["About","Blog","Careers","Press Kit","Partners"],
+  Support: ["Help Center","Contact Us","Status","Privacy Policy","Terms of Service"],
+  Enterprise: ["Fortune 500 Solutions","Team Management","Security","Compliance","White-label"],
 };
 
 export function Footer() {
   return (
-    <footer className="border-t border-white/10 py-16" style={{ background: "rgba(2,2,8,0.95)" }}>
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="grid grid-cols-2 md:grid-cols-5 gap-10 mb-12">
+    <footer style={{ background: "#040409", borderTop: "1px solid rgba(255,255,255,0.07)", padding: "64px 0 32px" }}>
+      <Container>
+        <div style={{ display: "grid", gridTemplateColumns: "1.4fr 1fr 1fr 1fr 1fr", gap: 48, marginBottom: 48 }} className="grid md:grid-cols-5">
           {/* Brand */}
-          <div className="col-span-2 md:col-span-1">
-            <div className="flex items-center gap-2 mb-4">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center font-black text-white text-lg">C</div>
-              <span className="font-bold text-white">Custom<span className="text-blue-400">Signature</span></span>
+          <div>
+            <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+              <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg, #2563eb, #1d4ed8)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "#fff", fontSize: 18 }}>C</div>
+              <span style={{ fontWeight: 700, fontSize: 15, color: "#fff" }}>Custom<span style={{ color: "#60a5fa" }}>Signature</span></span>
             </div>
-            <p className="text-gray-500 text-sm leading-relaxed mb-4">
-              The world&apos;s most advanced AI-generated email signature platform for Fortune 500 professionals.
+            <p style={{ color: "#6b7280", fontSize: 13, lineHeight: 1.65, marginBottom: 20 }}>
+              The world&apos;s most advanced AI email signature platform for Fortune 500 professionals.
             </p>
-            <div className="flex gap-3">
-              {["🌐", "📸", "💼", "📘", "▶️"].map((icon, i) => (
-                <motion.button key={i} whileHover={{ scale: 1.2 }}
-                  className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm hover:bg-blue-600/50 transition-colors">
-                  {icon}
-                </motion.button>
+            <div style={{ display: "flex", gap: 10 }}>
+              {["🌐","📸","in","▶","𝕏"].map((ic, i) => (
+                <button key={i} style={{ width: 34, height: 34, borderRadius: "50%", background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.08)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 13, cursor: "pointer", color: "#9ca3af" }}>{ic}</button>
               ))}
             </div>
           </div>
 
-          {/* Link columns */}
-          {Object.entries(LINKS).map(([category, links]) => (
-            <div key={category}>
-              <div className="text-white font-semibold text-sm mb-4">{category}</div>
-              <ul className="space-y-2">
-                {links.map((link) => (
-                  <li key={link}>
-                    <a href="#" className="text-gray-500 hover:text-white text-sm transition-colors">{link}</a>
+          {/* Links */}
+          {Object.entries(LINKS).map(([cat, links]) => (
+            <div key={cat}>
+              <div style={{ color: "#fff", fontWeight: 600, fontSize: 13, marginBottom: 16 }}>{cat}</div>
+              <ul style={{ listStyle: "none" }}>
+                {links.map(l => (
+                  <li key={l} style={{ marginBottom: 10 }}>
+                    <a href="#" style={{ color: "#6b7280", fontSize: 13, textDecoration: "none", transition: "color 0.2s" }}
+                      onMouseOver={e => (e.currentTarget.style.color = "#e5e7eb")}
+                      onMouseOut={e => (e.currentTarget.style.color = "#6b7280")}>
+                      {l}
+                    </a>
                   </li>
                 ))}
               </ul>
@@ -47,19 +48,17 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="pt-8 border-t border-white/10 flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="text-gray-600 text-sm">
-            © 2025 Custom Signature. All rights reserved.
-          </div>
-          <div className="flex items-center gap-6 text-sm text-gray-600">
+        <div style={{ paddingTop: 24, borderTop: "1px solid rgba(255,255,255,0.07)", display: "flex", alignItems: "center", justifyContent: "space-between", flexWrap: "wrap", gap: 16 }}>
+          <div style={{ color: "#4b5563", fontSize: 13 }}>© 2025 Custom Signature. All rights reserved.</div>
+          <div style={{ display: "flex", alignItems: "center", gap: 24, fontSize: 13, color: "#4b5563" }}>
             <span>Made with ❤️ for Fortune 500 professionals</span>
-            <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 7, height: 7, borderRadius: "50%", background: "#34d399" }} className="animate-pulse-dot" />
               <span>All systems operational</span>
             </div>
           </div>
         </div>
-      </div>
+      </Container>
     </footer>
   );
 }

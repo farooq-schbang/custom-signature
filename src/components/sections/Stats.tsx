@@ -1,119 +1,78 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef } from "react";
+import { Container } from "@/components/ui/Container";
 
 const STATS = [
-  {
-    icon: "↩",
-    value: "42%",
-    label: "Increase Reply Rate",
-    desc: "Recipients are 42% more likely to respond to emails with a professional, branded signature.",
-    color: "from-blue-600 to-blue-400",
-  },
-  {
-    icon: "🔗",
-    value: "3X",
-    label: "Increase Link Clicks",
-    desc: "Interactive social icons and CTA buttons drive 3X more engagement with every email you send.",
-    color: "from-purple-600 to-purple-400",
-  },
-  {
-    icon: "👤",
-    value: "50k+",
-    label: "Active Users",
-    desc: "Join thousands of professionals from Fortune 500 companies already using Custom Signature.",
-    color: "from-cyan-600 to-cyan-400",
-  },
-  {
-    icon: "✉️",
-    value: "1000+",
-    label: "Supported Email & CRM",
-    desc: "Works seamlessly with Gmail, Outlook, Apple Mail, HubSpot, Salesforce, and 1000+ more platforms.",
-    color: "from-green-600 to-green-400",
-  },
-  {
-    icon: "✅",
-    value: "100%",
-    label: "Social Status Sync",
-    desc: "Your social proof, follower counts, and verification badges update automatically in real time.",
-    color: "from-orange-600 to-orange-400",
-  },
+  { value: "42%", label: "Higher Reply Rate", desc: "Recipients are 42% more likely to respond when they see a professional branded signature.", color: "#2563eb", icon: "↩" },
+  { value: "3×", label: "More Link Clicks", desc: "Interactive social icons and CTA buttons drive 3× more engagement per email sent.", color: "#7c3aed", icon: "🔗" },
+  { value: "50k+", label: "Active Users", desc: "Join professionals from Fortune 500 companies who already rely on Custom Signature.", color: "#0891b2", icon: "👥" },
+  { value: "1000+", label: "Platforms Supported", desc: "Works seamlessly in Gmail, Outlook, HubSpot, Salesforce and 1000+ other platforms.", color: "#059669", icon: "🌐" },
+  { value: "100%", label: "Brand Compliant", desc: "Central admin controls ensure every employee email signature is always on-brand.", color: "#d97706", icon: "✅" },
 ];
 
 export function Stats() {
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-100px" });
+  const inView = useInView(ref, { once: true, margin: "-80px" });
 
   return (
-    <section ref={ref} id="why" className="py-28 relative" style={{ background: "radial-gradient(ellipse 60% 40% at 50% 50%, #1d4ed810, transparent)" }}>
-      <div className="max-w-7xl mx-auto px-6">
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <span className="inline-block px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest border border-blue-500/30 text-blue-400 mb-4">
-            By the Numbers
-          </span>
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4">
+    <section id="why" ref={ref} style={{ padding: "96px 0", background: "#06060f" }}>
+      <Container>
+        {/* Header */}
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
+          <div className="pill pill-blue" style={{ marginBottom: 16 }}>By the Numbers</div>
+          <h2 style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16 }}>
             Results That Speak
-            <span className="block bg-gradient-to-r from-blue-400 to-cyan-300 bg-clip-text text-transparent">
-              For Themselves
-            </span>
+            <br />
+            <span className="text-gradient-blue">For Themselves</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Every metric measured. Every advantage proven. See why the world&apos;s top professionals choose Custom Signature.
+          <p style={{ fontSize: 17, color: "#9ca3af", maxWidth: 520, margin: "0 auto", lineHeight: 1.65 }}>
+            Every metric measured. Every advantage proven. See why top professionals choose Custom Signature.
           </p>
         </motion.div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {STATS.map((stat, i) => (
+        {/* Grid */}
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20 }}>
+          {STATS.map((s, i) => (
             <motion.div
-              key={stat.label}
-              initial={{ opacity: 0, y: 40 }}
+              key={s.label}
+              initial={{ opacity: 0, y: 32 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
-              transition={{ delay: i * 0.1, duration: 0.6 }}
-              className="group relative rounded-2xl p-6 overflow-hidden cursor-default"
-              style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)" }}
-              whileHover={{ borderColor: "rgba(59,130,246,0.3)", background: "rgba(59,130,246,0.05)" }}
+              transition={{ delay: i * 0.08, duration: 0.5 }}
+              className="card card-hover"
+              style={{ padding: 28, cursor: "default" }}
+              whileHover={{ y: -4, transition: { duration: 0.2 } }}
             >
-              {/* Glow on hover */}
-              <div className={`absolute -inset-px rounded-2xl bg-gradient-to-br ${stat.color} opacity-0 group-hover:opacity-5 transition-opacity duration-500`} />
-
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.color} flex items-center justify-center text-xl mb-4`}>
-                {stat.icon}
+              <div style={{ width: 44, height: 44, borderRadius: 12, background: `${s.color}18`, border: `1px solid ${s.color}25`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20, marginBottom: 20 }}>
+                {s.icon}
               </div>
-
-              <div className={`text-4xl font-black mb-1 bg-gradient-to-r ${stat.color} bg-clip-text text-transparent`}>
-                {stat.value}
+              <div style={{ fontSize: 40, fontWeight: 900, color: s.color, letterSpacing: "-0.03em", marginBottom: 4, lineHeight: 1 }}>
+                {s.value}
               </div>
-              <div className="text-white font-semibold mb-2">{stat.label}</div>
-              <p className="text-gray-500 text-sm leading-relaxed">{stat.desc}</p>
+              <div style={{ color: "#fff", fontWeight: 700, fontSize: 15, marginBottom: 10 }}>{s.label}</div>
+              <p style={{ color: "#6b7280", fontSize: 13, lineHeight: 1.65 }}>{s.desc}</p>
             </motion.div>
           ))}
 
-          {/* Span card */}
+          {/* Fortune 500 card */}
           <motion.div
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 32 }}
             animate={inView ? { opacity: 1, y: 0 } : {}}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="md:col-span-2 lg:col-span-1 rounded-2xl p-6 flex flex-col justify-center items-center text-center"
-            style={{ background: "linear-gradient(135deg, #1d4ed820, #7c3aed10)", border: "1px solid rgba(99,102,241,0.2)" }}
+            transition={{ delay: 0.45, duration: 0.5 }}
+            style={{ padding: 28, borderRadius: 16, background: "linear-gradient(135deg, rgba(37,99,235,0.12), rgba(124,58,237,0.08))", border: "1px solid rgba(99,102,241,0.2)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", textAlign: "center", minHeight: 200 }}
           >
-            <div className="text-5xl mb-4">🏆</div>
-            <div className="text-2xl font-black text-white mb-2">Fortune 500</div>
-            <div className="text-gray-400 text-sm">Ready & Certified</div>
-            <div className="mt-4 flex -space-x-2">
-              {["G", "S", "A", "M", "D"].map((l, i) => (
-                <div key={i} className="w-8 h-8 rounded-full border-2 border-black flex items-center justify-center text-xs font-bold text-white"
-                  style={{ background: `hsl(${i * 60 + 200}, 70%, 45%)` }}>{l}</div>
+            <div style={{ fontSize: 44, marginBottom: 12 }}>🏆</div>
+            <div style={{ fontSize: 22, fontWeight: 900, color: "#fff", marginBottom: 6 }}>Fortune 500</div>
+            <div style={{ color: "#9ca3af", fontSize: 14, marginBottom: 20 }}>Ready & Certified</div>
+            <div style={{ display: "flex", marginLeft: -6 }}>
+              {["G","S","A","M","D"].map((l, i) => (
+                <div key={i} style={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid #06060f", background: `hsl(${i*60+200},65%,45%)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 12, fontWeight: 700, color: "#fff", marginLeft: -6 }}>{l}</div>
               ))}
-              <div className="w-8 h-8 rounded-full border-2 border-black bg-blue-600 flex items-center justify-center text-xs font-bold text-white">+</div>
+              <div style={{ width: 32, height: 32, borderRadius: "50%", border: "2px solid #06060f", background: "#2563eb", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 11, fontWeight: 700, color: "#fff", marginLeft: -6 }}>+</div>
             </div>
           </motion.div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

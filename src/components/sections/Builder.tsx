@@ -1,68 +1,48 @@
 "use client";
 import { motion, useInView } from "framer-motion";
 import { useRef, useState } from "react";
+import { Container } from "@/components/ui/Container";
 
-const ACCENT_COLORS = [
-  { color: "#2563eb", name: "Blue" },
-  { color: "#7c3aed", name: "Violet" },
-  { color: "#059669", name: "Emerald" },
-  { color: "#dc2626", name: "Red" },
-  { color: "#d97706", name: "Amber" },
-  { color: "#0891b2", name: "Cyan" },
-  { color: "#ec4899", name: "Pink" },
-  { color: "#f59e0b", name: "Yellow" },
-];
-
-const SOCIALS = [
-  { key: "web", icon: "🌐", label: "Website" },
-  { key: "li", icon: "in", label: "LinkedIn" },
-  { key: "yt", icon: "▶", label: "YouTube" },
-  { key: "tw", icon: "𝕏", label: "X / Twitter" },
-  { key: "ig", icon: "📸", label: "Instagram" },
-];
-
+const COLORS = ["#2563eb","#7c3aed","#059669","#dc2626","#d97706","#0891b2","#ec4899","#f59e0b"];
 const FIELDS = [
-  { key: "name", label: "Full Name", placeholder: "Alex Johnson" },
-  { key: "title", label: "Job Title", placeholder: "VP of Sales" },
-  { key: "company", label: "Company", placeholder: "Acme Corporation" },
-  { key: "email", label: "Email Address", placeholder: "alex@acmecorp.com" },
-  { key: "website", label: "Website", placeholder: "www.acmecorp.com" },
-  { key: "calendly", label: "Calendar / Booking Link", placeholder: "calendly.com/yourname" },
+  { key:"name", label:"Full Name", placeholder:"Alex Johnson" },
+  { key:"title", label:"Job Title", placeholder:"VP of Sales" },
+  { key:"company", label:"Company", placeholder:"Acme Corporation" },
+  { key:"email", label:"Email Address", placeholder:"alex@acmecorp.com" },
+  { key:"website", label:"Website", placeholder:"www.acmecorp.com" },
+  { key:"calendly", label:"Calendar Link", placeholder:"calendly.com/yourname" },
+];
+const SOCIALS = [
+  { key:"web", icon:"🌐", label:"Website" },
+  { key:"li", icon:"in", label:"LinkedIn" },
+  { key:"yt", icon:"▶", label:"YouTube" },
+  { key:"tw", icon:"𝕏", label:"Twitter" },
+  { key:"ig", icon:"📸", label:"Instagram" },
 ];
 
 export function Builder() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
-
-  const [form, setForm] = useState({
-    name: "Alex Johnson",
-    title: "VP of Sales",
-    company: "Acme Corp",
-    email: "alex@acmecorp.com",
-    website: "www.acmecorp.com",
-    calendly: "calendly.com/alexjohnson",
-    accentColor: "#2563eb",
-  });
+  const [f, setF] = useState({ name:"Alex Johnson", title:"VP of Sales", company:"Acme Corp", email:"alex@acmecorp.com", website:"www.acmecorp.com", calendly:"calendly.com/alexjohnson", accentColor:"#2563eb" });
   const [copied, setCopied] = useState(false);
-
-  const set = (k: string, v: string) => setForm((f) => ({ ...f, [k]: v }));
-  const c = form.accentColor;
+  const set = (k: string, v: string) => setF(p => ({ ...p, [k]: v }));
+  const c = f.accentColor;
 
   const handleCopy = () => {
-    const html = `<table cellpadding="0" cellspacing="0" border="0" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;max-width:480px;">
+    const html = `<table cellpadding="0" cellspacing="0" border="0" style="font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:13px;">
   <tr>
     <td style="vertical-align:middle;padding-right:10px;border-right:2px solid ${c}40;">
-      <table cellpadding="0" cellspacing="0">
-        ${SOCIALS.map(s => `<tr><td style="padding-bottom:6px;"><a href="#" style="display:block;width:24px;height:24px;border-radius:50%;background:${c}18;text-align:center;line-height:24px;text-decoration:none;font-size:11px;">${s.icon}</a></td></tr>`).join('')}
+      <table cellpadding="0" cellspacing="4">
+        ${SOCIALS.map(s=>`<tr><td><a href="#" style="display:block;width:22px;height:22px;border-radius:50%;background:${c}18;text-align:center;line-height:22px;text-decoration:none;font-size:10px;">${s.icon}</a></td></tr>`).join('')}
       </table>
     </td>
-    <td style="vertical-align:top;padding-left:14px;padding-right:14px;">
-      <div style="color:${c};font-weight:800;font-size:13px;margin-bottom:6px;">${form.company}</div>
-      <div style="color:#ffffff;font-weight:700;font-size:14px;margin-bottom:2px;">${form.name} <span style="color:#1d9bf0;font-size:11px;">✓</span></div>
-      <div style="color:#9ca3af;font-size:12px;margin-bottom:8px;">${form.title}</div>
-      <div style="color:#6b7280;font-size:11px;margin-bottom:2px;"><a href="mailto:${form.email}" style="color:#6b7280;text-decoration:none;">${form.email}</a></div>
-      <div style="color:#6b7280;font-size:11px;margin-bottom:8px;"><a href="https://${form.website}" style="color:#6b7280;text-decoration:none;">${form.website}</a></div>
-      ${form.calendly ? `<a href="https://${form.calendly}" style="display:inline-block;padding:5px 14px;background:${c};color:#ffffff;border-radius:20px;text-decoration:none;font-size:11px;font-weight:600;">📅 Book a Meeting</a>` : ''}
+    <td style="vertical-align:top;padding-left:12px;padding-right:12px;">
+      <div style="color:${c};font-weight:800;font-size:12px;margin-bottom:4px;">${f.company}</div>
+      <div style="color:#fff;font-weight:700;font-size:14px;margin-bottom:2px;">${f.name} <span style="color:#1d9bf0;font-size:11px;">✓</span></div>
+      <div style="color:#9ca3af;font-size:12px;margin-bottom:6px;">${f.title}</div>
+      <div style="color:#6b7280;font-size:11px;margin-bottom:2px;"><a href="mailto:${f.email}" style="color:#6b7280;text-decoration:none;">${f.email}</a></div>
+      <div style="color:#6b7280;font-size:11px;margin-bottom:8px;"><a href="https://${f.website}" style="color:#6b7280;text-decoration:none;">${f.website}</a></div>
+      ${f.calendly ? `<a href="https://${f.calendly}" style="display:inline-block;padding:5px 14px;background:${c};color:#fff;border-radius:20px;text-decoration:none;font-size:11px;font-weight:600;">📅 Book a Meeting</a>` : ''}
     </td>
   </tr>
 </table>`;
@@ -72,98 +52,55 @@ export function Builder() {
   };
 
   return (
-    <section ref={ref} id="builder" className="py-32 relative overflow-hidden">
-      {/* Background */}
-      <div className="orb absolute bottom-0 left-1/2 -translate-x-1/2 w-[600px] h-[300px]" style={{ background: "rgba(37,99,235,0.08)" }} />
-
-      <div className="relative z-10 max-w-7xl mx-auto px-6">
-        {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          className="text-center mb-20"
-        >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-widest mb-5"
-            style={{ background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.2)", color: "#22d3ee" }}>
-            ⚡ Live Builder
-          </div>
-          <h2 className="text-4xl md:text-6xl font-black tracking-tight leading-[1.05] mb-5">
+    <section id="builder" ref={ref} style={{ padding: "96px 0", background: "linear-gradient(180deg, #06060f 0%, #080915 100%)" }}>
+      <Container>
+        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
+          <div className="pill pill-cyan" style={{ marginBottom: 16 }}>⚡ Live Builder</div>
+          <h2 style={{ fontSize: "clamp(32px, 4vw, 52px)", fontWeight: 900, lineHeight: 1.1, letterSpacing: "-0.02em", marginBottom: 16 }}>
             Build Yours in
             <br />
-            <span style={{ background: "linear-gradient(135deg, #22d3ee 0%, #60a5fa 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}>
-              60 Seconds
-            </span>
+            <span className="text-gradient-green">60 Seconds</span>
           </h2>
-          <p className="text-gray-400 text-lg max-w-2xl mx-auto">
-            Fill in your details and watch your signature come to life in real time. Copy the HTML and paste it anywhere.
+          <p style={{ fontSize: 17, color: "#9ca3af", maxWidth: 480, margin: "0 auto", lineHeight: 1.65 }}>
+            Fill in your details and watch your signature come to life. Copy the HTML and paste it anywhere.
           </p>
         </motion.div>
 
-        <div className="grid lg:grid-cols-[1fr_1.1fr] gap-8">
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1.1fr", gap: 32 }} className="grid md:grid-cols-2">
           {/* Form */}
-          <motion.div
-            initial={{ opacity: 0, x: -24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.1, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="rounded-2xl p-6"
-            style={{ background: "rgba(255,255,255,0.025)", border: "1px solid rgba(255,255,255,0.07)" }}
-          >
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs" style={{ background: "rgba(37,99,235,0.2)", color: "#60a5fa" }}>✦</div>
-              <h3 className="text-white font-bold">Your Information</h3>
-            </div>
-
-            <div className="space-y-4">
+          <motion.div initial={{ opacity: 0, x: -24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.1, duration: 0.6 }}
+            className="card" style={{ padding: 28 }}>
+            <h3 style={{ fontWeight: 700, color: "#fff", fontSize: 15, marginBottom: 24, display: "flex", alignItems: "center", gap: 8 }}>
+              <span style={{ color: "#60a5fa" }}>✦</span> Your Information
+            </h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
               {FIELDS.map(({ key, label, placeholder }) => (
                 <div key={key}>
-                  <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-1.5">{label}</label>
-                  <input
-                    type="text"
-                    value={(form as Record<string, string>)[key]}
-                    onChange={(e) => set(key, e.target.value)}
-                    placeholder={placeholder}
-                    className="w-full px-4 py-2.5 rounded-xl text-white text-sm placeholder-gray-700 outline-none transition-all"
-                    style={{
-                      background: "rgba(255,255,255,0.04)",
-                      border: "1px solid rgba(255,255,255,0.08)",
-                    }}
-                    onFocus={(e) => { e.target.style.borderColor = `${c}60`; e.target.style.background = "rgba(255,255,255,0.06)"; }}
-                    onBlur={(e) => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
+                  <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 6 }}>{label}</label>
+                  <input type="text" value={(f as Record<string,string>)[key]} onChange={e => set(key, e.target.value)} placeholder={placeholder}
+                    style={{ width: "100%", padding: "10px 14px", borderRadius: 10, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", color: "#fff", fontSize: 13, outline: "none", boxSizing: "border-box" }}
+                    onFocus={e => { e.target.style.borderColor = `${c}60`; e.target.style.background = "rgba(255,255,255,0.06)"; }}
+                    onBlur={e => { e.target.style.borderColor = "rgba(255,255,255,0.08)"; e.target.style.background = "rgba(255,255,255,0.04)"; }}
                   />
                 </div>
               ))}
-
               {/* Color picker */}
               <div>
-                <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2.5">Brand Accent Color</label>
-                <div className="flex gap-2 flex-wrap">
-                  {ACCENT_COLORS.map(({ color, name }) => (
-                    <button
-                      key={color}
-                      title={name}
-                      onClick={() => set("accentColor", color)}
-                      className="w-8 h-8 rounded-full transition-all duration-200"
-                      style={{
-                        background: color,
-                        outline: form.accentColor === color ? `2px solid ${color}` : "2px solid transparent",
-                        outlineOffset: 2,
-                        transform: form.accentColor === color ? "scale(1.25)" : "scale(1)",
-                      }}
-                    />
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>Brand Color</label>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  {COLORS.map(col => (
+                    <button key={col} onClick={() => set("accentColor", col)} title={col}
+                      style={{ width: 30, height: 30, borderRadius: "50%", background: col, border: f.accentColor === col ? `2px solid ${col}` : "2px solid transparent", outline: f.accentColor === col ? `2px solid rgba(255,255,255,0.4)` : "2px solid transparent", outlineOffset: 2, transform: f.accentColor === col ? "scale(1.2)" : "scale(1)", cursor: "pointer", transition: "all 0.2s" }} />
                   ))}
                 </div>
               </div>
-
               {/* Socials */}
               <div>
-                <label className="block text-gray-500 text-xs font-semibold uppercase tracking-wider mb-2.5">Social Channels</label>
-                <div className="flex gap-2 flex-wrap">
+                <label style={{ display: "block", fontSize: 11, fontWeight: 600, color: "#6b7280", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 10 }}>Social Channels</label>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
                   {SOCIALS.map(({ key, icon, label }) => (
-                    <div key={key}
-                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium cursor-pointer transition-all"
-                      style={{ background: "rgba(255,255,255,0.05)", border: `1px solid rgba(255,255,255,0.08)`, color: "#9ca3af" }}
-                    >
-                      <span className="text-xs">{icon}</span> {label}
+                    <div key={key} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 12px", borderRadius: 100, background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", fontSize: 12, color: "#9ca3af", cursor: "pointer" }}>
+                      <span style={{ fontSize: 11 }}>{icon}</span> {label}
                     </div>
                   ))}
                 </div>
@@ -171,133 +108,92 @@ export function Builder() {
             </div>
           </motion.div>
 
-          {/* Live Preview */}
-          <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={inView ? { opacity: 1, x: 0 } : {}}
-            transition={{ delay: 0.2, duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-6 h-6 rounded-lg flex items-center justify-center text-xs" style={{ background: "rgba(5,150,105,0.2)", color: "#34d399" }}>⚡</div>
-              <h3 className="text-white font-bold">Live Preview</h3>
-              <div className="ml-auto flex items-center gap-1.5 text-xs text-green-400">
-                <motion.div animate={{ scale: [1,1.4,1] }} transition={{ duration:2, repeat:Infinity }}
-                  className="w-1.5 h-1.5 rounded-full bg-green-400" />
+          {/* Preview */}
+          <motion.div initial={{ opacity: 0, x: 24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2, duration: 0.6 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 20 }}>
+              <h3 style={{ fontWeight: 700, color: "#fff", fontSize: 15 }}>Live Preview</h3>
+              <div style={{ display: "flex", alignItems: "center", gap: 6, fontSize: 12, color: "#34d399", marginLeft: "auto" }}>
+                <motion.div animate={{ scale: [1,1.5,1] }} transition={{ duration: 2, repeat: Infinity }}
+                  style={{ width: 6, height: 6, borderRadius: "50%", background: "#34d399" }} />
                 Live
               </div>
             </div>
 
             {/* Email mockup */}
-            <div className="rounded-2xl overflow-hidden mb-4"
-              style={{ background: "rgba(8,8,18,0.95)", border: "1px solid rgba(255,255,255,0.08)", boxShadow: "0 24px 48px rgba(0,0,0,0.4)" }}>
-              {/* Chrome */}
-              <div className="px-4 py-3 border-b border-white/6 flex items-center gap-2" style={{ background: "rgba(255,255,255,0.02)" }}>
-                <div className="flex gap-1.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
-                  <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+            <div className="email-surface" style={{ marginBottom: 16 }}>
+              <div style={{ padding: "10px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", gap: 8, background: "rgba(255,255,255,0.02)" }}>
+                <div style={{ display: "flex", gap: 5 }}>
+                  {["rgba(255,69,58,0.7)","rgba(255,196,0,0.7)","rgba(40,200,64,0.7)"].map((bg,i) => <div key={i} style={{ width: 10, height: 10, borderRadius: "50%", background: bg }} />)}
                 </div>
-                <span className="ml-2 text-gray-600 text-xs">Gmail — Compose</span>
+                <span style={{ fontSize: 11, color: "#4b5563", marginLeft: 8 }}>Gmail — Compose</span>
               </div>
+              <div style={{ padding: 18 }}>
+                <p style={{ color: "#4b5563", fontSize: 13, marginBottom: 8 }}>Hi [Recipient],</p>
+                {[0.7,0.5].map((w,i) => <div key={i} style={{ height: 8, background: "rgba(255,255,255,0.06)", borderRadius: 4, marginBottom: 6, width: `${w*100}%` }} />)}
+                <p style={{ color: "#4b5563", fontSize: 13, marginTop: 10, marginBottom: 12 }}>Best regards,</p>
+                <div style={{ height: 1, background: "rgba(255,255,255,0.06)", marginBottom: 12 }} />
 
-              <div className="p-5">
-                <p className="text-gray-500 text-sm mb-2">Hi [Recipient],</p>
-                <div className="space-y-1.5 mb-2">
-                  <div className="h-2 bg-white/8 rounded-full w-5/6" />
-                  <div className="h-2 bg-white/8 rounded-full w-3/6" />
-                </div>
-                <p className="text-gray-500 text-sm mt-3 mb-4">Best regards,</p>
-                <div className="h-px bg-white/6 mb-4" />
-
-                {/* Signature preview */}
-                <motion.div layout className="rounded-xl overflow-hidden"
-                  style={{ background: "rgba(4,4,12,0.98)", border: `1px solid ${c}25` }}>
-                  <div className="flex">
-                    {/* Color accent bar */}
-                    <div className="w-1 flex-shrink-0" style={{ background: `linear-gradient(180deg, ${c}, ${c}30)` }} />
-                    {/* Social icons */}
-                    <div className="flex flex-col items-center gap-2 px-2.5 py-4 border-r border-white/6">
+                {/* Live sig */}
+                <div style={{ borderRadius: 10, overflow: "hidden", border: `1px solid ${c}22` }}>
+                  <div style={{ display: "flex" }}>
+                    <div style={{ width: 3, flexShrink: 0, background: `linear-gradient(180deg, ${c}, ${c}40)` }} />
+                    <div style={{ display: "flex", flexDirection: "column", gap: 7, padding: "12px 10px", borderRight: "1px solid rgba(255,255,255,0.06)" }}>
                       {SOCIALS.map(({ key, icon }) => (
-                        <motion.div key={key} whileHover={{ scale: 1.2 }}
-                          className="w-6 h-6 rounded-full flex items-center justify-center text-xs cursor-pointer"
-                          style={{ background: `${c}15`, border: `1px solid ${c}20` }}>
+                        <motion.div key={key} whileHover={{ scale: 1.15 }}
+                          style={{ width: 22, height: 22, borderRadius: "50%", background: `${c}15`, border: `1px solid ${c}20`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 9, cursor: "pointer" }}>
                           {icon}
                         </motion.div>
                       ))}
                     </div>
-                    {/* Info */}
-                    <div className="flex flex-1 items-center gap-4 px-4 py-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="font-bold text-sm mb-2 truncate" style={{ color: c }}>{form.company || "Your Company"}</div>
-                        <div className="flex items-center gap-1 mb-0.5">
-                          <span className="text-white font-bold text-sm truncate">{form.name || "Your Name"}</span>
-                          <span className="text-blue-400 text-xs">✓</span>
+                    <div style={{ flex: 1, padding: "12px 14px", display: "flex", gap: 12, alignItems: "center" }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ fontWeight: 800, fontSize: 12, color: c, marginBottom: 5, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.company || "Your Company"}</div>
+                        <div style={{ display: "flex", alignItems: "center", gap: 5, marginBottom: 2 }}>
+                          <span style={{ color: "#fff", fontWeight: 700, fontSize: 13, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.name || "Your Name"}</span>
+                          <span style={{ color: "#60a5fa", fontSize: 10 }}>✓</span>
                         </div>
-                        <div className="text-gray-400 text-xs mb-3">{form.title || "Your Title"}</div>
-                        <div className="text-xs space-y-1 mb-3">
-                          <div className="text-gray-500 truncate">{form.email || "you@company.com"}</div>
-                          <div className="text-gray-500 truncate">{form.website || "www.company.com"}</div>
-                        </div>
-                        {form.calendly && (
-                          <motion.div whileHover={{ scale: 1.04 }}
-                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold text-white cursor-pointer"
-                            style={{ background: c }}>
-                            📅 Book a Meeting
-                          </motion.div>
+                        <div style={{ color: "#9ca3af", fontSize: 11, marginBottom: 8 }}>{f.title || "Your Title"}</div>
+                        <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.email || "you@company.com"}</div>
+                        <div style={{ fontSize: 10, color: "#6b7280", marginBottom: 8, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{f.website || "www.company.com"}</div>
+                        {f.calendly && (
+                          <div style={{ display: "inline-block", padding: "4px 10px", borderRadius: 100, background: c, color: "#fff", fontSize: 10, fontWeight: 600, cursor: "pointer" }}>📅 Book a Meeting</div>
                         )}
                       </div>
-                      {/* Avatar */}
-                      <div className="w-[72px] h-[88px] rounded-xl overflow-hidden relative flex-shrink-0"
-                        style={{ background: `linear-gradient(145deg, ${c}35, ${c}08)` }}>
-                        <div className="absolute inset-0 flex items-center justify-center font-black text-2xl"
-                          style={{ color: `${c}90` }}>
-                          {(form.name || "Y").charAt(0).toUpperCase()}
-                        </div>
-                        <div className="absolute inset-0 opacity-25"
-                          style={{ background: `repeating-linear-gradient(45deg, transparent, transparent 5px, ${c}30 5px, ${c}30 6px)` }} />
-                        <div className="absolute bottom-1.5 right-1.5 bg-black/50 rounded px-1 py-0.5 text-white/60 border border-white/10"
-                          style={{ fontSize: 7, fontWeight: 700 }}>GIF</div>
+                      <div style={{ width: 58, height: 72, borderRadius: 8, background: `linear-gradient(135deg, ${c}35, ${c}08)`, flexShrink: 0, display: "flex", alignItems: "center", justifyContent: "center", position: "relative", overflow: "hidden" }}>
+                        <span style={{ fontWeight: 900, fontSize: 20, color: `${c}90` }}>{(f.name || "Y").charAt(0).toUpperCase()}</span>
+                        <div style={{ position: "absolute", inset: 0, background: `repeating-linear-gradient(45deg, transparent, transparent 4px, ${c}18 4px, ${c}18 5px)`, opacity: 0.4 }} />
+                        <div style={{ position: "absolute", bottom: 4, right: 4, background: "rgba(0,0,0,0.5)", borderRadius: 3, padding: "1px 4px", fontSize: 6, fontWeight: 700, color: "rgba(255,255,255,0.5)" }}>GIF</div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
+                </div>
 
-                {/* GIF slot */}
-                <div className="mt-3 p-3 rounded-xl border border-dashed border-white/10 flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0"
-                    style={{ background: `linear-gradient(135deg, ${c}25, ${c}08)` }}>🎬</div>
+                {/* GIF placeholder */}
+                <div style={{ marginTop: 12, padding: "10px 14px", borderRadius: 10, border: "1px dashed rgba(255,255,255,0.1)", display: "flex", alignItems: "center", gap: 12 }}>
+                  <div style={{ width: 38, height: 38, borderRadius: 8, background: `linear-gradient(135deg, ${c}25, ${c}08)`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18, flexShrink: 0 }}>🎬</div>
                   <div>
-                    <div className="text-white text-xs font-semibold">Hero Product GIF</div>
-                    <div className="text-gray-600 text-xs">Your animated brand showcase plays here</div>
+                    <div style={{ color: "#fff", fontSize: 12, fontWeight: 600 }}>Hero Product GIF</div>
+                    <div style={{ color: "#4b5563", fontSize: 11 }}>Your brand animation plays here</div>
                   </div>
-                  <span className="ml-auto text-xs px-2 py-0.5 rounded-full" style={{ background: `${c}15`, color: c, border: `1px solid ${c}25` }}>Pro</span>
+                  <div style={{ marginLeft: "auto", padding: "2px 8px", borderRadius: 100, background: `${c}15`, color: c, fontSize: 10, fontWeight: 700, border: `1px solid ${c}22` }}>Pro</div>
                 </div>
               </div>
             </div>
 
-            {/* CTA buttons */}
-            <div className="flex gap-3">
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleCopy}
-                className="flex-1 py-3.5 rounded-xl font-bold text-white text-sm transition-all"
-                style={{ background: copied ? "#059669" : `linear-gradient(135deg, ${c}, ${c}cc)`, boxShadow: `0 0 24px ${c}40` }}
-              >
-                {copied ? "✓ Copied to Clipboard!" : "📋 Copy HTML Code"}
+            {/* Actions */}
+            <div style={{ display: "flex", gap: 10 }}>
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} onClick={handleCopy}
+                style={{ flex: 1, padding: "14px 0", borderRadius: 12, background: copied ? "#059669" : `linear-gradient(135deg, ${c}, ${c}cc)`, color: "#fff", fontWeight: 700, fontSize: 14, border: "none", cursor: "pointer", boxShadow: `0 0 24px ${c}40` }}>
+                {copied ? "✓ Copied!" : "📋 Copy HTML Code"}
               </motion.button>
-              <motion.button
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className="px-5 py-3.5 rounded-xl font-bold text-white text-sm transition-all"
-                style={{ background: "rgba(255,255,255,0.06)", border: "1px solid rgba(255,255,255,0.1)" }}
-              >
+              <motion.button whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}
+                style={{ padding: "14px 20px", borderRadius: 12, background: "rgba(255,255,255,0.05)", color: "#fff", fontWeight: 700, fontSize: 14, border: "1px solid rgba(255,255,255,0.1)", cursor: "pointer" }}>
                 💾 Export
               </motion.button>
             </div>
           </motion.div>
         </div>
-      </div>
+      </Container>
     </section>
   );
 }

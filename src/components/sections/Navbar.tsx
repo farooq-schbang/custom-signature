@@ -1,9 +1,9 @@
 "use client";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Button } from "@/components/ui/Button";
+import { Container } from "@/components/ui/Container";
 
-const NAV_LINKS = [
+const LINKS = [
   { label: "Features", href: "#features" },
   { label: "Why Us", href: "#why" },
   { label: "Compare", href: "#compare" },
@@ -13,87 +13,83 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   useEffect(() => {
-    const handler = () => setScrolled(window.scrollY > 40);
-    window.addEventListener("scroll", handler);
-    return () => window.removeEventListener("scroll", handler);
+    const h = () => setScrolled(window.scrollY > 40);
+    window.addEventListener("scroll", h);
+    return () => window.removeEventListener("scroll", h);
   }, []);
 
   return (
-    <motion.nav
-      initial={{ y: -80, opacity: 0 }}
+    <motion.header
+      initial={{ y: -64, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6 }}
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "backdrop-blur-xl bg-black/70 border-b border-white/10 shadow-xl" : "bg-transparent"
-      }`}
+      transition={{ duration: 0.5 }}
+      style={{
+        position: "fixed", top: 0, left: 0, right: 0, zIndex: 100,
+        background: scrolled ? "rgba(6,6,15,0.85)" : "transparent",
+        backdropFilter: scrolled ? "blur(20px)" : "none",
+        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
+        transition: "all 0.3s",
+      }}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo */}
-        <a href="#" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-blue-400 flex items-center justify-center font-black text-white text-lg">
-            C
+      <Container>
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 68 }}>
+          {/* Logo */}
+          <a href="#" style={{ display: "flex", alignItems: "center", gap: 10, textDecoration: "none" }}>
+            <div style={{ width: 34, height: 34, borderRadius: 10, background: "linear-gradient(135deg, #2563eb, #1d4ed8)", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "#fff", fontSize: 18 }}>C</div>
+            <span style={{ fontWeight: 700, fontSize: 16, color: "#fff" }}>Custom<span style={{ color: "#60a5fa" }}>Signature</span></span>
+          </a>
+
+          {/* Desktop nav */}
+          <nav style={{ display: "flex", gap: 32 }} className="hidden md:flex">
+            {LINKS.map(l => (
+              <a key={l.label} href={l.href} style={{ color: "#9ca3af", fontSize: 14, fontWeight: 500, textDecoration: "none", transition: "color 0.2s" }}
+                onMouseOver={e => (e.currentTarget.style.color = "#fff")}
+                onMouseOut={e => (e.currentTarget.style.color = "#9ca3af")}>
+                {l.label}
+              </a>
+            ))}
+          </nav>
+
+          {/* CTA */}
+          <div style={{ display: "flex", alignItems: "center", gap: 10 }} className="hidden md:flex">
+            <button className="btn btn-text btn-sm">Log in</button>
+            <a href="#builder" className="btn btn-primary btn-sm">Get Started Free</a>
           </div>
-          <span className="font-bold text-white text-lg tracking-tight">
-            Custom<span className="text-blue-400">Signature</span>
-          </span>
-        </a>
 
-        {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.label}
-              href={link.href}
-              className="text-gray-400 hover:text-white text-sm font-medium transition-colors duration-200"
-            >
-              {link.label}
-            </a>
-          ))}
+          {/* Mobile toggle */}
+          <button onClick={() => setOpen(!open)} className="md:hidden"
+            style={{ padding: 8, background: "none", border: "none", cursor: "pointer", display: "flex", flexDirection: "column", gap: 5 }}>
+            <span style={{ display: "block", width: 22, height: 2, background: "#fff", borderRadius: 2, transition: "all 0.3s", transform: open ? "rotate(45deg) translate(5px, 5px)" : "none" }} />
+            <span style={{ display: "block", width: 22, height: 2, background: "#fff", borderRadius: 2, transition: "all 0.3s", opacity: open ? 0 : 1 }} />
+            <span style={{ display: "block", width: 22, height: 2, background: "#fff", borderRadius: 2, transition: "all 0.3s", transform: open ? "rotate(-45deg) translate(5px, -5px)" : "none" }} />
+          </button>
         </div>
-
-        {/* CTA */}
-        <div className="hidden md:flex items-center gap-3">
-          <Button variant="ghost" size="sm">Log in</Button>
-          <Button size="sm" href="#builder">Get Started Free</Button>
-        </div>
-
-        {/* Mobile toggle */}
-        <button
-          className="md:hidden p-2 text-white"
-          onClick={() => setMobileOpen(!mobileOpen)}
-        >
-          <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${mobileOpen ? "rotate-45 translate-y-2" : ""}`} />
-          <div className={`w-6 h-0.5 bg-white mb-1.5 transition-all ${mobileOpen ? "opacity-0" : ""}`} />
-          <div className={`w-6 h-0.5 bg-white transition-all ${mobileOpen ? "-rotate-45 -translate-y-2" : ""}`} />
-        </button>
-      </div>
+      </Container>
 
       {/* Mobile menu */}
       <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden bg-black/95 border-t border-white/10 px-6 py-4 flex flex-col gap-4"
-          >
-            {NAV_LINKS.map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
-                className="text-gray-300 hover:text-white py-2 border-b border-white/5"
-                onClick={() => setMobileOpen(false)}
-              >
-                {link.label}
-              </a>
-            ))}
-            <Button size="sm" className="mt-2 w-full">Get Started Free</Button>
+        {open && (
+          <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} exit={{ opacity: 0, height: 0 }}
+            style={{ background: "rgba(6,6,15,0.98)", borderTop: "1px solid rgba(255,255,255,0.07)" }}>
+            <Container>
+              <div style={{ padding: "16px 0", display: "flex", flexDirection: "column", gap: 0 }}>
+                {LINKS.map(l => (
+                  <a key={l.label} href={l.href} onClick={() => setOpen(false)}
+                    style={{ color: "#9ca3af", fontSize: 15, fontWeight: 500, textDecoration: "none", padding: "12px 0", borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                    {l.label}
+                  </a>
+                ))}
+                <a href="#builder" className="btn btn-primary btn-md" style={{ marginTop: 16, textAlign: "center", justifyContent: "center" }}>
+                  Get Started Free
+                </a>
+              </div>
+            </Container>
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.nav>
+    </motion.header>
   );
 }
