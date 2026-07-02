@@ -13,7 +13,7 @@ import { Footer } from "@/components/sections/Footer";
 
 export default function Home() {
   return (
-    <main style={{ background: "#020208" }}>
+    <main>
       <Navbar />
       <Hero />
       <Stats />

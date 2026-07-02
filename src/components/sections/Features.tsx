@@ -4,57 +4,72 @@ import { useRef } from "react";
 import { Container } from "@/components/ui/Container";
 
 const FEATURES = [
-  { icon: "⚡", title: "AI-Powered Generator", desc: "Our AI analyzes top-performing signatures and generates one optimized for your industry and role.", color: "#fbbf24", pill: "AI" },
-  { icon: "🎬", title: "GIF Product Showcase", desc: "Embed a looping product demo or brand animation directly inside your signature. Your pitch, delivered automatically.", color: "#f87171", pill: "Pro" },
-  { icon: "📅", title: "1-Click Meeting Booking", desc: "Embed your Calendly, Cal.com or Google Calendar link. Prospects book instantly — no back-and-forth.", color: "#34d399", pill: "" },
-  { icon: "✓", title: "Verified Blue Badge", desc: "The blue checkmark signals instant credibility to every recipient. Stand out in crowded inboxes.", color: "#1d9bf0", pill: "" },
-  { icon: "📊", title: "Analytics Dashboard", desc: "See who clicked your links, which platforms drive the most traffic, and what content converts best.", color: "#a78bfa", pill: "Pro" },
-  { icon: "🏢", title: "Team Management", desc: "Deploy consistent branded signatures across your entire team in minutes. Brand compliance at scale.", color: "#60a5fa", pill: "Enterprise" },
-  { icon: "🔒", title: "SSO & SAML Integration", desc: "Enterprise-grade security with single sign-on, SAML 2.0 support, and role-based access controls.", color: "#fb923c", pill: "Enterprise" },
-  { icon: "🌐", title: "1000+ Platform Support", desc: "Works natively in Gmail, Outlook, Apple Mail, HubSpot, Salesforce, and over 1,000 other platforms.", color: "#22d3ee", pill: "" },
+  {
+    icon: "⚡", color: "#0047FF", bg: "#EEF2FF",
+    title: "AI Signature Generator",
+    desc: "Describe your role and our AI builds an optimized, industry-specific signature in seconds — no blank canvas.",
+    badge: "AI",
+  },
+  {
+    icon: "🎬", color: "#DC2626", bg: "#FEF2F2",
+    title: "GIF Product Showcase",
+    desc: "Embed a looping demo directly inside your signature. Your product pitch, delivered automatically in every email.",
+    badge: "Pro",
+  },
+  {
+    icon: "📅", color: "#059669", bg: "#ECFDF5",
+    title: "1-Click Booking Link",
+    desc: "Connect Calendly, Cal.com, or Google Calendar. Recipients book instantly — no back-and-forth.",
+    badge: null,
+  },
+  {
+    icon: "✓", color: "#1d9bf0", bg: "#EFF6FF",
+    title: "Verified Blue Badge",
+    desc: "The credibility signal every Fortune 500 prospect looks for. A checkmark that signals you're the real deal.",
+    badge: null,
+  },
+  {
+    icon: "📊", color: "#7C3AED", bg: "#F5F3FF",
+    title: "Click Analytics",
+    desc: "Know which recipients clicked your links, which platforms drive traffic, and what content converts best.",
+    badge: "Pro",
+  },
+  {
+    icon: "🏢", color: "#D97706", bg: "#FFFBEB",
+    title: "Team Deployment",
+    desc: "Roll out consistent, on-brand signatures to your entire sales team in one afternoon. Brand compliance at scale.",
+    badge: "Enterprise",
+  },
 ];
 
 export function Features() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
-
   return (
-    <section id="features" ref={ref} style={{ padding: "100px 0", background: "#020208" }}>
+    <section id="features" ref={ref} style={{ background: "#fff", padding: "100px 0" }}>
       <Container>
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
-          <div className="pill pill-blue" style={{ marginBottom: 20 }}>Features</div>
-          <h2 className="display-lg" style={{ color: "#fff", marginBottom: 16 }}>
-            Everything You Need to
-            <br />
-            <span className="grad-aurora">Win Every Inbox.</span>
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} style={{ textAlign: "center", marginBottom: 64 }}>
+          <div className="tag tag-blue" style={{ marginBottom: 16 }}>Features</div>
+          <h2 className="t-heading" style={{ color: "#09090b", marginBottom: 16 }}>
+            Supercharge Your Emails.
           </h2>
-          <p style={{ fontSize: 17, color: "#64748b", maxWidth: 440, margin: "0 auto", lineHeight: 1.7 }}>
-            Not just a signature builder — a complete first-impression engine for ambitious professionals.
+          <p className="t-body" style={{ maxWidth: 440, margin: "0 auto" }}>
+            Every tool you need to turn your email footer into a revenue-generating first impression.
           </p>
         </motion.div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 16 }}>
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(3,1fr)", gap: 20 }} className="grid md:grid-cols-3">
           {FEATURES.map((f, i) => (
-            <motion.div key={f.title}
-              initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * 0.06, duration: 0.5 }}
-              className="card card-hover"
-              style={{ padding: 24, position: "relative", overflow: "hidden" }}
-            >
-              {/* Subtle glow bg */}
-              <div style={{ position: "absolute", top: -40, right: -40, width: 120, height: 120, borderRadius: "50%", background: `${f.color}08`, filter: "blur(20px)", pointerEvents: "none" }} />
-
-              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 16 }}>
-                <div style={{ width: 44, height: 44, borderRadius: 12, background: `${f.color}15`, border: `1px solid ${f.color}25`, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 20 }}>
-                  {f.icon}
-                </div>
-                {f.pill && (
-                  <span style={{ fontSize: 10, fontWeight: 700, padding: "2px 8px", borderRadius: 100, background: `${f.color}20`, color: f.color, border: `1px solid ${f.color}30`, letterSpacing: "0.05em" }}>
-                    {f.pill}
-                  </span>
+            <motion.div key={f.title} initial={{ opacity: 0, y: 24 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: i * 0.07 }}
+              className="card-light" style={{ padding: 28, position: "relative" }}>
+              <div style={{ display: "flex", alignItems: "flex-start", justifyContent: "space-between", marginBottom: 20 }}>
+                <div style={{ width: 48, height: 48, borderRadius: 13, background: f.bg, display: "flex", alignItems: "center", justifyContent: "center", fontSize: 22 }}>{f.icon}</div>
+                {f.badge && (
+                  <span style={{ fontSize: 10.5, fontWeight: 700, padding: "2px 9px", borderRadius: 100, background: f.bg, color: f.color, border: `1px solid ${f.color}30` }}>{f.badge}</span>
                 )}
               </div>
-              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#e2e8f0", marginBottom: 8 }}>{f.title}</h3>
-              <p style={{ fontSize: 13, color: "#64748b", lineHeight: 1.65 }}>{f.desc}</p>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#09090b", marginBottom: 8 }}>{f.title}</h3>
+              <p style={{ fontSize: 14, color: "#71717a", lineHeight: 1.65 }}>{f.desc}</p>
             </motion.div>
           ))}
         </div>

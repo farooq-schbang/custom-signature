@@ -6,81 +6,90 @@ import { Container } from "@/components/ui/Container";
 const PLATFORMS = [
   { name: "Gmail", color: "#EA4335", logo: "G" },
   { name: "Outlook", color: "#0078D4", logo: "O" },
-  { name: "Apple Mail", color: "#64748b", logo: "✉" },
+  { name: "Apple Mail", color: "#3b3b3b", logo: "✉" },
   { name: "HubSpot", color: "#FF7A59", logo: "H" },
-  { name: "Salesforce", color: "#00A1E0", logo: "SF" },
+  { name: "Salesforce", color: "#00A1E0", logo: "S" },
   { name: "Superhuman", color: "#E83B3B", logo: "SH" },
-  { name: "Notion Mail", color: "#e2e8f0", logo: "N" },
-  { name: "Front", color: "#fb923c", logo: "F" },
+  { name: "Front", color: "#FB923C", logo: "Fr" },
+  { name: "Notion Mail", color: "#09090b", logo: "N" },
 ];
 
-const AI_ROLES = [
-  { role: "VP of Sales", company: "Salesforce", result: "Authority-forward layout, LinkedIn CTA, booking link" },
-  { role: "Startup Founder", company: "YC W24", result: "Bold brand, product GIF, investor-optimized" },
-  { role: "Creative Director", company: "Figma", result: "Visual portfolio link, Instagram, animated avatar" },
-  { role: "Investment Banker", company: "Goldman Sachs", result: "Conservative trust layout, compliance-ready" },
+const AI_SUGGESTIONS = [
+  { role: "Sales AE", industry: "SaaS", tip: "Authority layout + Calendly + GIF demo" },
+  { role: "Creative Director", industry: "Design", tip: "Portfolio link + Instagram + animated avatar" },
+  { role: "Startup Founder", industry: "Tech", tip: "Product GIF + investor credibility badge" },
+  { role: "Investment Banker", industry: "Finance", tip: "Conservative trust layout + compliance-ready" },
 ];
 
 export function InteractiveDesign() {
   const ref = useRef(null);
   const inView = useInView(ref, { once: true, margin: "-60px" });
-  const [aiRole, setAiRole] = useState(0);
+  const [activeRole, setActiveRole] = useState(0);
   const [generating, setGenerating] = useState(false);
-  const [generated, setGenerated] = useState(false);
+  const [done, setDone] = useState(false);
 
-  const handleGenerate = () => {
-    setGenerating(true);
-    setGenerated(false);
-    setTimeout(() => { setGenerating(false); setGenerated(true); }, 1400);
+  const handleGen = () => {
+    setGenerating(true); setDone(false);
+    setTimeout(() => { setGenerating(false); setDone(true); }, 1500);
   };
 
   return (
-    <section ref={ref} style={{ padding: "100px 0", background: "#020208" }}>
+    <section style={{ background: "#06060f", color: "#fff", padding: "100px 0" }}>
       <Container>
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 64 }} className="grid md:grid-cols-2">
-          {/* AI generator panel */}
+        {/* Section header */}
+        <motion.div initial={{ opacity: 0, y: 20 }} animate={inView ? { opacity: 1, y: 0 } : {}} ref={ref}
+          style={{ textAlign: "center", marginBottom: 72 }}>
+          <div className="tag tag-dark" style={{ marginBottom: 16 }}>AI + Compatibility</div>
+          <h2 className="t-heading" style={{ color: "#fff", marginBottom: 12 }}>
+            Built for how you actually work.
+          </h2>
+          <p style={{ fontSize: 17, color: "#71717a", maxWidth: 440, margin: "0 auto", lineHeight: 1.7 }}>
+            AI generates your signature. It renders perfectly everywhere your team sends email.
+          </p>
+        </motion.div>
+
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 48, alignItems: "start" }} className="grid md:grid-cols-2">
+          {/* AI generator */}
           <motion.div initial={{ opacity: 0, x: -24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.1 }}>
-            <div className="pill pill-gold" style={{ marginBottom: 20 }}>AI-Powered</div>
-            <h2 className="display-md" style={{ color: "#fff", marginBottom: 16 }}>
-              AI Writes Your
-              <br />
-              <span className="grad-aurora">Perfect Signature.</span>
-            </h2>
-            <p style={{ fontSize: 16, color: "#64748b", marginBottom: 36, lineHeight: 1.7 }}>
-              Tell us your role. Our AI generates an optimized signature template proven to drive engagement for your industry.
-            </p>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", borderRadius: 100, background: "#FFFBEB", border: "1px solid #FDE68A", marginBottom: 14 }}>
+                <span style={{ fontSize: 12 }}>⚡</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#D97706" }}>AI Signature Generator</span>
+              </div>
+              <h3 className="t-subheading" style={{ color: "#fff", marginBottom: 10 }}>Tell us your role.<br />We build the rest.</h3>
+              <p style={{ fontSize: 15, color: "#71717a", lineHeight: 1.65 }}>Our AI has analyzed thousands of high-performing signatures by industry and role. It generates yours — optimized from day one.</p>
+            </div>
 
             <div className="card" style={{ padding: 24 }}>
-              <div style={{ fontSize: 12, fontWeight: 700, color: "#475569", textTransform: "uppercase", letterSpacing: "0.1em", marginBottom: 14 }}>Select Your Role</div>
-              <div style={{ display: "flex", flexDirection: "column", gap: 8, marginBottom: 20 }}>
-                {AI_ROLES.map((r, i) => (
-                  <button key={i} onClick={() => { setAiRole(i); setGenerated(false); }}
+              <p style={{ fontSize: 12, fontWeight: 700, color: "#52525b", textTransform: "uppercase", letterSpacing: "0.08em", marginBottom: 12 }}>Select your role</p>
+              <div style={{ display: "flex", flexDirection: "column", gap: 7, marginBottom: 18 }}>
+                {AI_SUGGESTIONS.map((s, i) => (
+                  <button key={i} onClick={() => { setActiveRole(i); setDone(false); }}
                     style={{
-                      padding: "12px 16px", borderRadius: 10, border: aiRole === i ? "1px solid rgba(251,191,36,0.4)" : "1px solid rgba(255,255,255,0.07)",
-                      background: aiRole === i ? "rgba(251,191,36,0.06)" : "rgba(255,255,255,0.02)",
-                      cursor: "pointer", textAlign: "left", transition: "all 0.15s",
-                    }}
-                  >
-                    <div style={{ fontSize: 13, fontWeight: 700, color: aiRole === i ? "#fbbf24" : "#94a3b8" }}>{r.role}</div>
-                    <div style={{ fontSize: 11, color: "#475569", marginTop: 2 }}>@ {r.company}</div>
+                      padding: "11px 14px", borderRadius: 10, border: activeRole === i ? "1.5px solid #0047FF" : "1px solid rgba(255,255,255,0.08)",
+                      background: activeRole === i ? "rgba(0,71,255,0.1)" : "rgba(255,255,255,0.03)",
+                      cursor: "pointer", textAlign: "left", transition: "all 0.15s", display: "flex", justifyContent: "space-between", alignItems: "center",
+                    }}>
+                    <div>
+                      <span style={{ fontSize: 13, fontWeight: 700, color: activeRole === i ? "#60a5fa" : "#e4e4e7" }}>{s.role}</span>
+                      <span style={{ fontSize: 12, color: "#71717a", marginLeft: 6 }}>@ {s.industry}</span>
+                    </div>
+                    {activeRole === i && <span style={{ fontSize: 10, color: "#60a5fa" }}>→</span>}
                   </button>
                 ))}
               </div>
 
-              <button onClick={handleGenerate} className="btn btn-primary btn-md" style={{ width: "100%", justifyContent: "center" }}>
-                {generating ? (
-                  <span style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                    <motion.span animate={{ rotate: 360 }} transition={{ duration: 0.8, repeat: Infinity, ease: "linear" }}>⟳</motion.span>
-                    Generating...
-                  </span>
-                ) : "✦ Generate AI Signature"}
+              <button onClick={handleGen} className="btn btn-primary btn-md" style={{ width: "100%", justifyContent: "center", borderRadius: 10 }}>
+                {generating
+                  ? <span style={{ display: "flex", alignItems: "center", gap: 8 }}><motion.span animate={{ rotate: 360 }} transition={{ duration: 0.7, repeat: Infinity, ease: "linear" }}>◌</motion.span> Generating…</span>
+                  : "✦ Generate My AI Signature"}
               </button>
 
-              {generated && (
-                <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }}
-                  style={{ marginTop: 16, padding: "12px 14px", borderRadius: 10, background: "rgba(34,197,94,0.08)", border: "1px solid rgba(34,197,94,0.2)" }}>
-                  <div style={{ fontSize: 12, color: "#22c55e", fontWeight: 700, marginBottom: 6 }}>✓ Signature generated!</div>
-                  <div style={{ fontSize: 11, color: "#475569", lineHeight: 1.6 }}>{AI_ROLES[aiRole].result}</div>
+              {done && (
+                <motion.div initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }}
+                  style={{ marginTop: 12, padding: "12px 14px", borderRadius: 10, background: "rgba(5,150,105,0.1)", border: "1px solid rgba(5,150,105,0.25)" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#34d399", marginBottom: 4 }}>✓ Signature ready!</div>
+                  <div style={{ fontSize: 12, color: "#71717a" }}>{AI_SUGGESTIONS[activeRole].tip}</div>
                 </motion.div>
               )}
             </div>
@@ -88,35 +97,32 @@ export function InteractiveDesign() {
 
           {/* Platform compatibility */}
           <motion.div initial={{ opacity: 0, x: 24 }} animate={inView ? { opacity: 1, x: 0 } : {}} transition={{ delay: 0.2 }}>
-            <div className="pill pill-cyan" style={{ marginBottom: 20 }}>Works Everywhere</div>
-            <h2 className="display-md" style={{ color: "#fff", marginBottom: 16 }}>
-              One Signature.
-              <br />
-              <span className="grad-blue">Every Platform.</span>
-            </h2>
-            <p style={{ fontSize: 16, color: "#64748b", marginBottom: 36, lineHeight: 1.7 }}>
-              Your signature renders pixel-perfectly in every email client, CRM, and sales tool your team uses.
-            </p>
+            <div style={{ marginBottom: 24 }}>
+              <div style={{ display: "inline-flex", alignItems: "center", gap: 6, padding: "4px 12px", borderRadius: 100, background: "rgba(6,182,212,0.1)", border: "1px solid rgba(6,182,212,0.25)", marginBottom: 14 }}>
+                <span style={{ fontSize: 12 }}>🌐</span>
+                <span style={{ fontSize: 12, fontWeight: 700, color: "#22d3ee" }}>Works Everywhere</span>
+              </div>
+              <h3 className="t-subheading" style={{ color: "#fff", marginBottom: 10 }}>One signature.<br />Every platform.</h3>
+              <p style={{ fontSize: 15, color: "#71717a", lineHeight: 1.65 }}>Renders pixel-perfectly in Gmail, Outlook, Apple Mail, and every CRM your sales team uses.</p>
+            </div>
 
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10, marginBottom: 16 }}>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8, marginBottom: 12 }}>
               {PLATFORMS.map((p, i) => (
-                <motion.div key={p.name}
-                  initial={{ opacity: 0, y: 12 }} animate={inView ? { opacity: 1, y: 0 } : {}} transition={{ delay: 0.25 + i * 0.05 }}
+                <motion.div key={p.name} initial={{ opacity: 0, scale: 0.95 }} animate={inView ? { opacity: 1, scale: 1 } : {}} transition={{ delay: 0.25 + i * 0.04 }}
                   className="card card-hover"
-                  style={{ padding: "12px 16px", display: "flex", alignItems: "center", gap: 10, cursor: "default" }}
-                >
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: `${p.color}18`, border: `1px solid ${p.color}28`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 11, color: p.color, flexShrink: 0 }}>{p.logo}</div>
-                  <span style={{ fontWeight: 600, fontSize: 12, color: "#94a3b8" }}>{p.name}</span>
-                  <span style={{ marginLeft: "auto", color: "#22c55e", fontSize: 11 }}>✓</span>
+                  style={{ padding: "11px 14px", display: "flex", alignItems: "center", gap: 10 }}>
+                  <div style={{ width: 30, height: 30, borderRadius: 7, background: `${p.color}18`, border: `1px solid ${p.color}28`, display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 700, fontSize: 10, color: p.color, flexShrink: 0 }}>{p.logo}</div>
+                  <span style={{ fontSize: 12, fontWeight: 600, color: "#a1a1aa" }}>{p.name}</span>
+                  <span style={{ marginLeft: "auto", fontSize: 11, color: "#22c55e" }}>✓</span>
                 </motion.div>
               ))}
             </div>
 
-            <div style={{ padding: "14px 18px", borderRadius: 12, background: "rgba(37,99,235,0.07)", border: "1px solid rgba(37,99,235,0.18)", display: "flex", alignItems: "center", gap: 12 }}>
-              <span style={{ fontSize: 22 }}>🌐</span>
+            <div style={{ padding: "13px 16px", borderRadius: 12, background: "rgba(0,71,255,0.08)", border: "1px solid rgba(0,71,255,0.2)", display: "flex", alignItems: "center", gap: 10 }}>
+              <span style={{ fontSize: 20 }}>🌐</span>
               <div>
-                <div style={{ color: "#e2e8f0", fontWeight: 700, fontSize: 14 }}>+ 1,000 more platforms</div>
-                <div style={{ color: "#475569", fontSize: 12 }}>If it sends email, your signature works in it</div>
+                <div style={{ fontWeight: 700, color: "#e4e4e7", fontSize: 13 }}>+ 1,000 more platforms</div>
+                <div style={{ fontSize: 12, color: "#52525b" }}>If it sends email, your signature works in it</div>
               </div>
             </div>
           </motion.div>

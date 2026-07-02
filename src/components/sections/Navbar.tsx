@@ -1,9 +1,9 @@
 "use client";
-import { motion, useScroll, useTransform } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 
-const NAV_LINKS = [
+const NAV = [
   { label: "Features", href: "#features" },
   { label: "Examples", href: "#compare" },
   { label: "How It Works", href: "#howitworks" },
@@ -12,66 +12,49 @@ const NAV_LINKS = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false);
-
   useEffect(() => {
-    const fn = () => setScrolled(window.scrollY > 20);
+    const fn = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", fn, { passive: true });
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
   return (
-    <motion.header
-      initial={{ y: -20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.5 }}
+    <motion.header initial={{ y: -16, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.4 }}
       style={{
         position: "fixed", top: 0, left: 0, right: 0, zIndex: 1000,
-        borderBottom: scrolled ? "1px solid rgba(255,255,255,0.07)" : "1px solid transparent",
-        background: scrolled ? "rgba(2,2,8,0.88)" : "transparent",
+        background: scrolled ? "rgba(255,255,255,0.92)" : "rgba(255,255,255,0)",
         backdropFilter: scrolled ? "blur(20px) saturate(180%)" : "none",
-        transition: "all 0.3s ease",
-      }}
-    >
+        borderBottom: scrolled ? "1px solid rgba(0,0,0,0.07)" : "1px solid transparent",
+        transition: "all 0.3s",
+      }}>
       <Container>
-        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: 64 }}>
+        <div style={{ height: 62, display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+
           {/* Logo */}
-          <a href="#" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 10 }}>
-            <div style={{
-              width: 32, height: 32, borderRadius: 9,
-              background: "linear-gradient(135deg, #2563eb, #7c3aed)",
-              display: "flex", alignItems: "center", justifyContent: "center",
-              fontWeight: 900, color: "#fff", fontSize: 16,
-              boxShadow: "0 4px 16px rgba(37,99,235,0.4)",
-            }}>C</div>
-            <span style={{ fontWeight: 800, fontSize: 15, color: "#fff" }}>
-              Custom<span style={{ color: "#60a5fa" }}>Signature</span>
-            </span>
+          <a href="#" style={{ textDecoration: "none", display: "flex", alignItems: "center", gap: 9 }}>
+            <div style={{ width: 30, height: 30, borderRadius: 8, background: "#0047FF", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 900, color: "#fff", fontSize: 15 }}>C</div>
+            <span style={{ fontWeight: 800, fontSize: 15, color: "#09090b", letterSpacing: "-0.02em" }}>Custom<span style={{ color: "#0047FF" }}>Sig</span></span>
           </a>
 
-          {/* Desktop nav */}
-          <nav style={{ display: "flex", alignItems: "center", gap: 4 }} className="hidden md:flex">
-            {NAV_LINKS.map(l => (
-              <a key={l.label} href={l.href} style={{
-                padding: "6px 14px", borderRadius: 8, fontSize: 14, fontWeight: 500,
-                color: "#94a3b8", textDecoration: "none", transition: "color 0.2s, background 0.2s",
-              }}
-                onMouseOver={e => { e.currentTarget.style.color = "#e2e8f0"; e.currentTarget.style.background = "rgba(255,255,255,0.06)"; }}
-                onMouseOut={e => { e.currentTarget.style.color = "#94a3b8"; e.currentTarget.style.background = "transparent"; }}
+          {/* Nav */}
+          <nav style={{ display: "flex", gap: 2 }} className="hidden md:flex">
+            {NAV.map(l => (
+              <a key={l.label} href={l.href}
+                style={{ padding: "6px 14px", borderRadius: 8, fontSize: 14, fontWeight: 500, color: "#3f3f46", textDecoration: "none", transition: "color 0.15s, background 0.15s" }}
+                onMouseOver={e => { e.currentTarget.style.color = "#09090b"; e.currentTarget.style.background = "#f4f4f5"; }}
+                onMouseOut={e => { e.currentTarget.style.color = "#3f3f46"; e.currentTarget.style.background = "transparent"; }}
               >{l.label}</a>
             ))}
           </nav>
 
           {/* Actions */}
-          <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            <a href="#" style={{ fontSize: 14, fontWeight: 500, color: "#94a3b8", textDecoration: "none", padding: "6px 12px" }}
-              onMouseOver={e => e.currentTarget.style.color = "#e2e8f0"}
-              onMouseOut={e => e.currentTarget.style.color = "#94a3b8"}
-              className="hidden md:block"
+          <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+            <a href="#" className="btn btn-sm hidden md:inline-flex"
+              style={{ color: "#3f3f46", background: "transparent", fontWeight: 500 }}
+              onMouseOver={e => e.currentTarget.style.color = "#09090b"}
+              onMouseOut={e => e.currentTarget.style.color = "#3f3f46"}
             >Log in</a>
-            <a href="#builder" className="btn btn-primary btn-sm" style={{ fontSize: 13, padding: "8px 18px" }}>
-              Get Started Free
-            </a>
+            <a href="#builder" className="btn btn-primary btn-sm">Get Started Free</a>
           </div>
         </div>
       </Container>
