@@ -1,7 +1,8 @@
 "use client";
 import { motion, useInView } from "framer-motion";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
+import { createClient } from "@/lib/supabase/client";
 
 const FIELDS = [
   { key: "name", label: "Full Name", placeholder: "Alex Johnson" },
@@ -22,12 +23,60 @@ export function Builder() {
   const [color, setColor] = useState("#0047FF");
   const [badge, setBadge] = useState(true);
   const [tab, setTab] = useState("Design");
-  const [copied, setCopied] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const set = (k: string, v: string) => setFields(p => ({ ...p, [k]: v }));
 
-  const handleCopy = () => {
-    const html = `<table cellpadding="0" cellspacing="0" style="font-family:Arial,sans-serif;"><tr><td style="border-top:3px solid ${color};padding-top:12px;"><div style="display:flex;gap:12px;align-items:flex-start;"><div style="width:44px;height:44px;border-radius:50%;background:${color};color:#fff;font-weight:800;font-size:16px;display:flex;align-items:center;justify-content:center;">${(fields.name||"A")[0]}</div><div><strong style="color:#111;font-size:14px;">${fields.name||""}</strong><br/><span style="color:#6b7280;font-size:12px;">${fields.title||""} · ${fields.company||""}</span><br/><a href="mailto:${fields.email||""}" style="color:#9ca3af;font-size:11px;text-decoration:none;">${fields.email||""}</a></div></div></td></tr></table>`;
-    navigator.clipboard.writeText(html).then(() => { setCopied(true); setTimeout(() => setCopied(false), 2200); });
+  // Restore a signature the user built before being sent through login.
+  useEffect(() => {
+    try {
+      const stashed = localStorage.getItem("pending_signature");
+      if (stashed) {
+        const cfg = JSON.parse(stashed);
+        if (cfg.fields) setFields(cfg.fields);
+        if (cfg.color) setColor(cfg.color);
+        if (typeof cfg.badge === "boolean") setBadge(cfg.badge);
+        localStorage.removeItem("pending_signature");
+      }
+    } catch {
+      // ignore corrupt stash
+    }
+  }, []);
+
+  // Free to build, $8 to export: save the signature, then send to Stripe Checkout.
+  // The HTML itself is only ever generated server-side after payment.
+  const handleGetSignature = async () => {
+    setBusy(true);
+    setError(null);
+    const config = { fields, color, badge };
+    try {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        localStorage.setItem("pending_signature", JSON.stringify(config));
+        window.location.href = `/login?next=${encodeURIComponent("/#builder")}`;
+        return;
+      }
+      const saveRes = await fetch("/api/signatures", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ config }),
+      });
+      if (!saveRes.ok) throw new Error("Could not save your signature. Please try again.");
+      const { id } = await saveRes.json();
+
+      const checkoutRes = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ signatureId: id }),
+      });
+      if (!checkoutRes.ok) throw new Error("Could not start checkout. Please try again.");
+      const { url } = await checkoutRes.json();
+      window.location.href = url;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Something went wrong. Please try again.");
+      setBusy(false);
+    }
   };
 
   return (
@@ -140,12 +189,13 @@ export function Builder() {
               </div>
 
               <div style={{ marginTop: 12, display: "flex", gap: 8 }}>
-                <button onClick={handleCopy} className="btn btn-primary btn-md" style={{ flex: 1, justifyContent: "center", borderRadius: 10, transition: "all 0.2s" }}>
-                  {copied ? "✓ Copied to Clipboard!" : "📋 Copy HTML Signature"}
+                <button onClick={handleGetSignature} disabled={busy} className="btn btn-primary btn-md" style={{ flex: 1, justifyContent: "center", borderRadius: 10, transition: "all 0.2s" }}>
+                  {busy ? "One moment…" : "Get my signature — $8"}
                 </button>
-                <a href="#pricing" className="btn btn-ghost btn-md">Upgrade</a>
+                <a href="/dashboard" className="btn btn-ghost btn-md">My signatures</a>
               </div>
-              <p style={{ textAlign: "center", fontSize: 12, color: "#a1a1aa", marginTop: 8 }}>Paste into Gmail, Outlook, Apple Mail & any CRM</p>
+              {error && <p style={{ textAlign: "center", fontSize: 12, color: "#DC2626", marginTop: 8 }}>{error}</p>}
+              <p style={{ textAlign: "center", fontSize: 12, color: "#a1a1aa", marginTop: 8 }}>One-time payment · No subscription · Paste into Gmail, Outlook, Apple Mail & any CRM</p>
             </div>
           </motion.div>
         </div>

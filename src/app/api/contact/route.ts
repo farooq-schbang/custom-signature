@@ -1,5 +1,5 @@
-export const dynamic = "force-static";
 import { NextRequest, NextResponse } from "next/server";
+import { Resend } from "resend";
 
 interface ContactRequest {
   name: string;
@@ -22,16 +22,23 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Invalid email address" }, { status: 400 });
     }
 
-    // In production: send to email service (SendGrid, Resend, etc.)
-    // For now, log and return success
-    console.log("Contact form submission:", {
-      name: body.name,
-      email: body.email,
-      company: body.company,
-      plan: body.plan,
-      message: body.message,
-      timestamp: new Date().toISOString(),
-    });
+    if (process.env.RESEND_API_KEY && process.env.CONTACT_TO_EMAIL) {
+      const resend = new Resend(process.env.RESEND_API_KEY);
+      await resend.emails.send({
+        from: process.env.RESEND_FROM_EMAIL || "CustomSig <onboarding@resend.dev>",
+        to: process.env.CONTACT_TO_EMAIL,
+        replyTo: body.email,
+        subject: `Contact form: ${body.name}${body.plan ? ` (${body.plan})` : ""}`,
+        text: `Name: ${body.name}\nEmail: ${body.email}\nCompany: ${body.company || "—"}\nPlan: ${body.plan || "—"}\n\n${body.message}`,
+      });
+    } else {
+      console.log("Contact form submission (Resend not configured):", {
+        name: body.name,
+        email: body.email,
+        company: body.company,
+        plan: body.plan,
+      });
+    }
 
     return NextResponse.json({
       success: true,

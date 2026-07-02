@@ -2,6 +2,7 @@
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
+import { createClient } from "@/lib/supabase/client";
 
 const NAV = [
   { label: "Features", href: "#features" },
@@ -12,9 +13,12 @@ const NAV = [
 
 export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false);
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", fn, { passive: true });
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
@@ -49,12 +53,18 @@ export function Navbar() {
 
           {/* Actions */}
           <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-            <a href="#" className="btn btn-sm hidden md:inline-flex"
-              style={{ color: "#3f3f46", background: "transparent", fontWeight: 500 }}
-              onMouseOver={e => e.currentTarget.style.color = "#09090b"}
-              onMouseOut={e => e.currentTarget.style.color = "#3f3f46"}
-            >Log in</a>
-            <a href="#builder" className="btn btn-primary btn-sm">Get Started Free</a>
+            {loggedIn ? (
+              <a href="/dashboard" className="btn btn-primary btn-sm">Dashboard</a>
+            ) : (
+              <>
+                <a href="/login" className="btn btn-sm hidden md:inline-flex"
+                  style={{ color: "#3f3f46", background: "transparent", fontWeight: 500 }}
+                  onMouseOver={e => e.currentTarget.style.color = "#09090b"}
+                  onMouseOut={e => e.currentTarget.style.color = "#3f3f46"}
+                >Log in</a>
+                <a href="#builder" className="btn btn-primary btn-sm">Get Started Free</a>
+              </>
+            )}
           </div>
         </div>
       </Container>
