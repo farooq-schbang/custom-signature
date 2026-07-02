@@ -2,11 +2,16 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { SignatureRow } from "@/components/dashboard/SignatureRow";
 import { LogoutButton } from "@/components/dashboard/LogoutButton";
+import { DemoDashboard } from "@/components/dashboard/DemoDashboard";
 import type { SignatureConfig } from "@/lib/signature-html";
 
 export const metadata = { title: "Dashboard — CustomSig" };
 
 export default async function DashboardPage() {
+  if (process.env.NEXT_PUBLIC_DEMO_MODE === "1") {
+    return <DemoDashboard />;
+  }
+
   const supabase = await createClient();
   const {
     data: { user },

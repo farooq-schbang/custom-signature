@@ -2,6 +2,7 @@
 import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { isDemo, demoLogin } from "@/lib/demo";
 import { AuthCard, AuthInput, GoogleButton } from "@/components/auth/AuthCard";
 
 function LoginForm() {
@@ -17,6 +18,11 @@ function LoginForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    if (isDemo) {
+      demoLogin(email);
+      window.location.href = next;
+      return;
+    }
     const supabase = createClient();
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
@@ -29,6 +35,11 @@ function LoginForm() {
   };
 
   const handleGoogle = async () => {
+    if (isDemo) {
+      demoLogin("demo.user@gmail.com");
+      window.location.href = next;
+      return;
+    }
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",

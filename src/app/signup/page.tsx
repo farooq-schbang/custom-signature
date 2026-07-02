@@ -2,6 +2,7 @@
 import { Suspense, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
+import { isDemo, demoLogin } from "@/lib/demo";
 import { AuthCard, AuthInput, GoogleButton } from "@/components/auth/AuthCard";
 
 function SignupForm() {
@@ -18,6 +19,11 @@ function SignupForm() {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    if (isDemo) {
+      demoLogin(email);
+      window.location.href = next;
+      return;
+    }
     const supabase = createClient();
     const { error } = await supabase.auth.signUp({
       email,
@@ -36,6 +42,11 @@ function SignupForm() {
   };
 
   const handleGoogle = async () => {
+    if (isDemo) {
+      demoLogin("demo.user@gmail.com");
+      window.location.href = next;
+      return;
+    }
     const supabase = createClient();
     await supabase.auth.signInWithOAuth({
       provider: "google",

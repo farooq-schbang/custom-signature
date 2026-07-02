@@ -3,6 +3,7 @@ import { motion, useInView } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { Container } from "@/components/ui/Container";
 import { createClient } from "@/lib/supabase/client";
+import { isDemo, demoGetUser, demoSaveSignature } from "@/lib/demo";
 
 const FIELDS = [
   { key: "name", label: "Full Name", placeholder: "Alex Johnson" },
@@ -50,6 +51,16 @@ export function Builder() {
     setError(null);
     const config = { fields, color, badge };
     try {
+      if (isDemo) {
+        if (!demoGetUser()) {
+          localStorage.setItem("pending_signature", JSON.stringify(config));
+          window.location.href = `/login?next=${encodeURIComponent("/#builder")}`;
+          return;
+        }
+        const sig = demoSaveSignature(config);
+        window.location.href = `/checkout/demo?signature_id=${sig.id}`;
+        return;
+      }
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {

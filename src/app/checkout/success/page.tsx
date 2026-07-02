@@ -2,6 +2,7 @@
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { AuthCard } from "@/components/auth/AuthCard";
+import { isDemo, demoGetSignature } from "@/lib/demo";
 
 function SuccessContent() {
   const params = useSearchParams();
@@ -19,6 +20,21 @@ function SuccessContent() {
       if (stopped) return;
       attempts.current += 1;
       try {
+        if (isDemo) {
+          const sig = demoGetSignature(signatureId);
+          if (sig?.isPaid) {
+            const res = await fetch("/api/demo/export", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ config: sig.config }),
+            });
+            const data = await res.json();
+            setHtml(data.html);
+            return;
+          }
+          setTimedOut(true);
+          return;
+        }
         const res = await fetch(`/api/signatures/${signatureId}/export`);
         if (res.ok) {
           const data = await res.json();

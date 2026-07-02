@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 import { createClient } from "@/lib/supabase/client";
+import { isDemo, demoGetUser } from "@/lib/demo";
 
 const NAV = [
   { label: "Features", href: "#features" },
@@ -17,8 +18,12 @@ export function Navbar() {
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 12);
     window.addEventListener("scroll", fn, { passive: true });
-    const supabase = createClient();
-    supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
+    if (isDemo) {
+      setLoggedIn(!!demoGetUser());
+    } else {
+      const supabase = createClient();
+      supabase.auth.getUser().then(({ data }) => setLoggedIn(!!data.user));
+    }
     return () => window.removeEventListener("scroll", fn);
   }, []);
 
